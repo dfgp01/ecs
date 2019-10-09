@@ -1,0 +1,15 @@
+{
+	"screen" : {
+		"width" : 800,
+		"height" : 800
+	},
+	"fps" : 60,
+	"camera" : {
+		"x" : 400,
+		"y" : 400
+	},
+	"stage" : {
+		"width" : 1800,
+		"height" : 1800
+	}
+}
