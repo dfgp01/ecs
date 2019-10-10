@@ -1,7 +1,7 @@
 import { GetActionSystem } from "./action";
 import { GetRenderUpdateSystem, GetDrawRectSystem } from "./render";
 import { GetPosUpdateSystem } from "./move";
-import { runTick } from "../../foundation/render/canvas";
+import { runTick } from "../../foundation/engine/h5/processor";
 
 /**
  * 主系统列表

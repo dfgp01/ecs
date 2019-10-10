@@ -1,3 +1,6 @@
+import { SetPos } from "../pos/utils";
+import { NewRect, UpdateRectPosByUnit } from "../../foundation/geometric/rect";
+import { ToLocatePos } from "../../foundation/geometric/point";
 
 
 /**
@@ -24,12 +27,9 @@ function IsInCamera(camera = null, rect = null){
     return IsRectsCross(camera.rect, rect);
 }
 
-//转为镜头坐标x
-function ToCameraX(camera = null, x = 0){
-    return ToLocateX(x, camera.pos.x);
-}
-function ToCameraY(camera = null, y = 0){
-    return ToLocateY(y, camera.pos.y);
+//转为镜头坐标
+function ToCameraPos(camera = null, targetPos = null){
+    return ToLocatePos(targetPos, camera.pos);
 }
 
 /**
@@ -40,4 +40,4 @@ function CameraMove(camera = null, x = 0, y = 0){
     UpdateRectPosByUnit(camera.rect, x, y);
 }
 
-export{NewCamera, IsInCamera, ToCameraX, ToCameraY, CameraMove }
+export{NewCamera, IsInCamera, ToCameraPos, CameraMove}

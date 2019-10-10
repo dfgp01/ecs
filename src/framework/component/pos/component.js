@@ -1,6 +1,6 @@
-import { NewPos, NewVec } from "../../base/geometric/point";
-import { PushToLink, GetLinkData, Link } from "../../base/structure/link";
-import { Component } from "../../base/ecs";
+import { NewPos, NewVec } from "../../foundation/geometric/point";
+import { PushToLink, GetLinkData } from "../../foundation/structure/link";
+import { Component } from "../../foundation/structure/ecs";
 
 /**
  * 位置组件

@@ -1,6 +1,6 @@
 import { GetGroupPairList } from "./utils";
-import { LinkIterator, LinkCompare } from "../../../base/structure/link";
 import { ColliderSystem } from "../base";
+import { LinkIterator, LinkCompare } from "../../../foundation/structure/link";
 
 //分组碰撞检测系统
 class GroupColliderSystem extends ColliderSystem {

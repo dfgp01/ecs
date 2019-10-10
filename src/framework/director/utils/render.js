@@ -1,5 +1,5 @@
 import { drawImage, drawRect, drawLine, drawCircle } from "../../foundation/engine/h5/render";
-import { getSpriteFrameByName } from "../../foundation/";
+import { getSpriteFrameByName } from "../../foundation/structure/frame";
 
  /**
   * 获取精灵帧

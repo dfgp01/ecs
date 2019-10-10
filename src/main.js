@@ -1,3 +1,14 @@
+import data from './data';
+import { StartGameTest } from './framework/director/utils/game';
+import { NewPos } from './framework/foundation/geometric/point';
+import { NewLineWithPos } from './framework/foundation/geometric/line';
+import { InterSectionPos } from './framework/foundation/geometric/utils';
+import { DrawCircle } from './framework/director/utils/render';
+
+/**
+ *  2019.10.09
+ *      vs忽然不提示import了，按照网上的方法，加了个jsconfig.json就可以了
+ */
 
 //谨记数据驱动
 var options = {
@@ -20,7 +31,6 @@ var options = {
 }
 
 var startPos;
-var endPos;
 var line1;
 var line2;
 

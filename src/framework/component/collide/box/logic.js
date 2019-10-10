@@ -1,6 +1,5 @@
-import { GetRectHalfWidth, GetRectHalfHeight, GetRectHeight, GetRectWidth } from "../../../base/geometric/rect";
-import { NewLineWithPos } from "../../../base/geometric/line";
-import { NewPos, GetDistance } from "../../../base/geometric/point";
+import { GetRectStartPos, GetRectHalfWidth, GetRectWidth, GetRectHalfHeight, GetRectHeight } from "../../../foundation/geometric/rect";
+import { NewPos, GetDistance } from "../../../foundation/geometric/point";
 
 
 function doFix(bodyCollider = null, pos = null, vec = null, blockCollider = null){
@@ -23,8 +22,9 @@ function touchVerticalLine(bodyCollider = null, pos = null, vec = null, blockCol
 
     //位置和方向是否正确
     let x = 0;
-    let x1 = GetRectX1(blockRect) - GetRectHalfWidth(bodyRect);
-    let x2 = GetRectX2(blockRect) + GetRectHalfWidth(bodyRect);
+    let x1 = GetRectStartPos(blockRect).x - GetRectHalfWidth(bodyRect);
+    let x2 = x1 + GetRectWidth(bodyRect);
+
     if(pos.x <= x1 && vec.x > 0){
         x = x1;
     }else if(pos.x >= x2 && vec.x < 0){
@@ -54,8 +54,8 @@ function touchHorizontalLine(bodyCollider = null, pos = null, vec = null, blockC
 
     //位置和方向是否正确
     let y = 0;
-    let y1 = GetRectY1(blockRect) - GetRectHalfHeight(bodyRect);
-    let y2 = GetRectY2(blockRect) + GetRectHalfHeight(bodyRect);
+    let y1 = GetRectStartPos(blockRect).y - GetRectHalfHeight(bodyRect);
+    let y2 = y1 + GetRectHeight(bodyRect);
     if(pos.y <= y1 && vec.y > 0){
         y = y1;
     }else if(pos.y >= y2 && vec.y < 0){

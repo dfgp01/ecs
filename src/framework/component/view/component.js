@@ -1,3 +1,5 @@
+import { Component } from "../../foundation/structure/ecs";
+import { PushToLink, GetLinkData, RemoveByKeyId } from "../../foundation/structure/link";
 
 
 /**

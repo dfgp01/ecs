@@ -1,7 +1,7 @@
 import { GetRectStartPos } from '../base/geometric/rect';
 import { FixInRect, IsPosInRect, IsRectsCross } from '../base/geometric/utils';
 import { getSystemList, runWithScene } from './system/run';
-import { initGame } from './world/run'
+import { initGame } from './world/res'
 import { LoadResource } from '../foundation/render/utils';
 import { getStageRect } from './world/tile';
 import { canvasDrawLine } from '../foundation/render/canvas';

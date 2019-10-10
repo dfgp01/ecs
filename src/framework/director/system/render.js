@@ -1,8 +1,11 @@
-import { System } from "../../base/ecs";
-import { UpdateRectPosByUnit, GetRectWidth, GetRectHeight, GetRectStartPos } from "../../base/geometric/rect";
-import { LinkIterator } from "../../base/structure/link";
-import { ToLocatePos } from "../../base/geometric/point";
-import { GetDisplayList } from "../../common/view/component";
+import { System } from "../../foundation/structure/ecs";
+import { GetDisplayList } from "../../component/view/component";
+import { LinkIterator } from "../../foundation/structure/link";
+import { GetPos } from "../../component/pos/utils";
+import { UpdateRectPosByUnit, GetRectStartPos } from "../../foundation/geometric/rect";
+import { GetCamera } from "../world/res";
+import { IsInCamera } from "../../component/camera/utils";
+import { ToLocatePos } from "../../foundation/geometric/point";
 
 /**
  * 渲染系统，逻辑步骤：

@@ -1,6 +1,7 @@
-import { actionUpdate, actionEnd } from "../../common/action/base";
-import { System } from "../../base/ecs";
-import { LinkIterator } from "../../base/structure/link";
+import { System } from "../../foundation/structure/ecs";
+import { GetRunnigActionList } from "../../action/utils";
+import { LinkIterator } from "../../foundation/structure/link";
+import { actionUpdate, actionEnd } from "../../action/base";
 
 /**
  * 动作系统

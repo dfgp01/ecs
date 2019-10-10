@@ -1,3 +1,5 @@
+import { NewPos } from "../../foundation/geometric/point";
+import { GetGridMapWidth, GetGridMapHeight, NewGridMap, GetGridWidth, GetGridHeight } from "../../foundation/structure/gridmap";
 
 /**
  * 2d瓷砖地图，由GridMap扩展
@@ -19,7 +21,7 @@ class TileMap {
 }
 
 function NewTileMap(rows = 0, columns = 0, gridWidth = 0, gridHeight = 0, x = 0, y = 0){
-    let gridmap = NewGridmap(rows, columns, gridWidth, gridHeight);
+    let gridmap = NewGridMap(rows, columns, gridWidth, gridHeight);
     return new TileMap(gridmap, x, y);
 }
 

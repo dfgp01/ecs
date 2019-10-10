@@ -1,5 +1,5 @@
 import { isStop, isStart, actionStart, actionStop } from './base';
-import { CreateAnimateFrame, CreateAnimateAction } from './animate';
+import { PushToLink, RemoveByKeyId } from '../foundation/structure/link';
 
 
 var actionList = new Link();
@@ -27,27 +27,4 @@ function StopAction(action = null){
     }
 }
 
-
-/**
- * 根据json数据创建序列帧动画
- */
-function CreateAnimateWithData(animateData = null){
-    if(!animateData){
-        return null;
-    }
-    
-    let framesData = animateData['frames'];
-    if(!framesData || framesData.length == 0){
-        return null;
-    }
-
-    let animateFrames = [];
-    framesData.forEach(frameData => {
-        animateFrames.push(
-            CreateAnimateFrame(GetSpriteFrame(spriteFrameName),
-                frameData['duration'], frameData['xOffset'], frameData['yOffset']));
-    });
-    return CreateAnimateAction(animateData['animate-type'], entityId, animateFrames);
-}
-
-export {GetRunnigActionList, RunAction, StopAction, CreateAnimateWithData}
+export {GetRunnigActionList, RunAction, StopAction}

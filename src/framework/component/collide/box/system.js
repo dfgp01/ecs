@@ -1,8 +1,8 @@
-import { LinkIterator } from "../../../base/structure/link";
-import { NewLineWithVec } from "../../../base/geometric/line";
 import { GetBodyColliderList, GetBlockColliderList } from "./utils";
 import { ColliderSystem } from "../base";
 import { doFix } from "./logic";
+import { NewLineWithVec } from "../../../foundation/geometric/line";
+import { LinkIterator } from "../../../foundation/structure/link";
 
 
 /**

@@ -1,5 +1,5 @@
 import { getPosComponent, getPosComponentList } from './component';
-import { RemoveByKeyId } from '../../base/structure/link';
+import { RemoveByKeyId } from '../../foundation/structure/link';
 
 function SetPos(entityId = 0, x = 0, y = 0){
     let pos = getPosComponent(entityId).pos;

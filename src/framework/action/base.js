@@ -17,7 +17,7 @@ const ACTION_STATE_END = 2;
 */
 class Action extends Tuple {
     constructor(entityId = 0, priority = 0){
-        super(priority);         
+        super(priority);
         this.entityId = entityId;   //所属者
         this.state = ACTION_STATE_END;
     }

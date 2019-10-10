@@ -1,4 +1,6 @@
 
+var _engine = getEngine();
+
 function loadImg(imgSrc, onLoadCallback){
     let img = new Image();
     img.src = imgSrc;

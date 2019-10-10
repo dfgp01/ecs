@@ -1,12 +1,13 @@
 import { NewRect } from "../../base/geometric/rect";
 import { SetFrame } from "../component/view/utils";
 import { Action } from "./base";
-import { GetSpriteFrameWidth, GetSpriteFrameHeight } from "../../foundation/render/frame";
+import { GetSpriteFrameWidth, GetSpriteFrameHeight } from "../foundation/structure/frame";
 
-const ANIMATE_TYPE_NORMAL = "normal";
-const ANIMATE_TYPE_STOP_LAST = "stop_last";
-const ANIMATE_TYPE_GOTO_FIRST = "goto_first";
-const ANIMATE_TYPE_REPEAT = "repeat";
+export const ANIMATE_TYPE_NORMAL = 0;
+export const ANIMATE_TYPE_REPEAT = 1;
+export const ANIMATE_TYPE_STOP_LAST = 2;
+export const ANIMATE_TYPE_GOTO_FIRST = 3;
+
 
 
 /**

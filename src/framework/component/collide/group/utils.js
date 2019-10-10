@@ -1,5 +1,5 @@
-import { PushToLink, Link, RemoveByKeyId } from "../../../base/structure/link";
 import { Collider } from "../base";
+import { RemoveByKeyId, PushToLink } from "../../../foundation/structure/link";
 
 class GroupPair {
     constructor(type1 = 0, team1 = null, type2 = 0, team2 = null){

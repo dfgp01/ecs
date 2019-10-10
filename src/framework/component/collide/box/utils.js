@@ -1,5 +1,5 @@
-import { Link, PushToLink, RemoveByKeyId } from "../../../base/structure/link";
 import { Collider } from "../base";
+import { PushToLink, RemoveByKeyId } from "../../../foundation/structure/link";
 
 class BodyCollider extends Collider {
     constructor(entityId = 0, rect = null, tag = 0){

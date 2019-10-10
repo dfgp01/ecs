@@ -1,3 +1,6 @@
+import { getEngine } from "./model";
+
+var _engine = getEngine();
 
 function clear() {
     let c = _engine.canvas;

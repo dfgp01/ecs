@@ -1,6 +1,6 @@
-import { System } from "../../base/ecs";
-import { GetMoveComponentList } from "../../common/move/utils";
-import { LinkIterator } from "../../base/structure/link";
+import { System } from "../../foundation/structure/ecs";
+import { LinkIterator } from "../../foundation/structure/link";
+import { GetPosComponentList } from "../../component/pos/utils";
 
 /**
  * 2019.09.29
@@ -9,7 +9,7 @@ import { LinkIterator } from "../../base/structure/link";
  */
 class PosUpdateSystem extends System {
     onUpdate(dt = 0){
-        LinkIterator(GetMoveComponentList(), moveCom => {
+        LinkIterator(GetPosComponentList(), moveCom => {
             let vec = moveCom.vec;
             let pos = moveCom.pos;
             pos.x += vec.x;
@@ -33,7 +33,7 @@ function GetPosUpdateSystem(){
  */
 class ClearSystem extends System {
     onUpdate(dt = 0){
-        LinkIterator(GetMoveComponentList(), moveCom => {
+        LinkIterator(GetPosComponentList(), moveCom => {
             let vec = moveCom.vec;
             vec.x = 0;
             vec.y = 0;
