@@ -1,5 +1,5 @@
 import { NewPos, NewVec } from "../../foundation/geometric/point";
-import { PushToLink, GetLinkData } from "../../foundation/structure/link";
+import { PushToLink, GetLinkData, NewLink } from "../../foundation/structure/link";
 import { Component } from "../../foundation/structure/ecs";
 
 /**
@@ -13,7 +13,7 @@ class PosComponent extends Component {
     }
 }
 
-var posComs = new Link();
+var posComs = NewLink();
 function createPosComponent(entityId = 0) {
     let com = new PosComponent(entityId);
     PushToLink(posComs, com);

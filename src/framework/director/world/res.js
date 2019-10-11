@@ -2,7 +2,7 @@ import { initSystems } from "../system/run";
 import { initCanvas } from "../../foundation/engine/h5/model";
 import { onKeyCallback, onMouseCallback } from "../../foundation/engine/h5/processor";
 import { NewCamera } from "../../component/camera/utils";
-import { CreateTileMapWithData } from "../../component/tile/utils";
+import { createTileMapWithData } from "./adapter";
 
 /**
  * 通过参数配置初始化系统资源
@@ -60,7 +60,7 @@ function GetCamera(){
  */
 var tilemap = null;
 function initTile(tilemapData = null){
-    tilemap = CreateTileMapWithData(tilemapData, tilemapData.initHandler);
+    tilemap = createTileMapWithData(tilemapData, tilemapData.initHandler);
 }
 function getTilemap(){
     return tilemap;

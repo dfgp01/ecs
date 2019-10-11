@@ -1,3 +1,8 @@
+/**
+ * 2019.10.10
+ * 	注意，link-interface，需要有id, priority两个属性
+ */
+
 
 /**
 *   The Base Struct
@@ -27,6 +32,7 @@ class Component {
 
 /**
  * 基础元件
+ * TODO 暂时没什么用
  */
 class Tuple {
 	constructor(priority = 0){
@@ -39,6 +45,10 @@ class Tuple {
 *	The base System
 */
 class System {
+	constructor(priority = 0){
+		this.priority = priority;	//给link使用
+		this.id = NewEntityId();
+	}
     onStart(){}
     onUpdate(dt = 0){}
     onEnd(){}

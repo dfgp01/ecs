@@ -1,5 +1,5 @@
 import { Component } from "../../foundation/structure/ecs";
-import { PushToLink, GetLinkData, RemoveByKeyId } from "../../foundation/structure/link";
+import { PushToLink, GetLinkData, RemoveByKeyId, NewLink } from "../../foundation/structure/link";
 
 
 /**
@@ -13,7 +13,7 @@ class RenderComponent extends Component {
 	}
 }
 
-var renderComs = new Link();
+var renderComs = NewLink();
 function createRenderComponent(entityId = 0, viewData = null) {
     viewData = viewData ? viewData : {};
     let com = new RenderComponent(entityId, viewData.angle, viewData.scale);
@@ -43,7 +43,7 @@ class DisplayTuple extends Tuple {
 /**
  * 画布上的显示队列
  */
-var displayList = new Link();
+var displayList = NewLink();
 function GetDisplayList(){
     return displayList;
 }

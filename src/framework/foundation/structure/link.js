@@ -3,7 +3,6 @@ class LinkNode {
 		this.data = data;
 		this.prep = prep;
         this.next = next;
-        this.id = 0;
 	}
 }
 
@@ -17,6 +16,7 @@ class Link {
 		this._size = 0;
         this._delList = [];
         this._curr = this.head;
+        this._lock = false;
 	}
 }
 
@@ -52,29 +52,48 @@ function GetLinkSize(link = null){
 }
 
 /**
- * 添加
- * data必须是entity或component
+ * 添加到末尾
  */
 function PushToLink(link = null, data = null) {
-    if(!link || !data){
+    return addToLink(link, data, link.tail);
+}
+
+/**
+ * 插入到列表中
+ * data.priority顺序号，由大到小排序，默认为0
+ */
+function InsertToLink(link = null, data = null){
+    let priority = data && data.priority ? data.priority : 0;
+    let node = link.head.next;
+	while(node != link.tail){
+        if(priority > node.data.priority){
+            break;
+        }
+		node = node.next;
+    }
+    return addToLink(link, data, node);
+}
+
+function addToLink(link = null, data = null, next = null){
+    if(!link || !data || !data.id){
         //log here
         console.error("error param: ", link, data, data.id);
-        return
+        return null;
     }
     //不能重复添加
     if(link._map.get(data.id)){
-        console.error("error keyId:%d is exist", data.id);
-        return
+        console.error("error id:%d is exist", data.id);
+        return null;
     }
-    let p = link.tail.prep;
-    let n = link.tail;
-    let node = new LinkNode(data, p, n);
-    node.id = data.id;
-    p.next = node;
-    n.prep = node;
+    //新节点连接
+    let prep = next.prep;
+    let node = new LinkNode(data, prep, next);
+    prep.next = node;
+    next.prep = node;
+
     link._map.set(data.id, node);
     link._size++;
-    return;
+    return node;
 }
 
 /**
@@ -86,7 +105,7 @@ function RemoveByKeyId(link = null, keyId = 0){
         console.error("error param: ", link, keyId);
         return
     }
-    if(link._curr.id == keyId){
+    if(link._lock){
         link._delList.push(keyId);
         return;
     }
@@ -115,16 +134,18 @@ function LinkIterator(link = null, callback = null){
         //log here
         return
     }
-    link._curr = link.head.next;
-	while(link._curr != link.tail){
-		if(callback(link._curr.data)){
+    link._lock = true;
+    let node = link.head.next;
+	while(node != link.tail){
+		if(callback(node.data)){
             break;
         }
-		link._curr = node.next;
+		node = node.next;
     }
     while(link._delList.length > 0){
-        RemoveByKeyId(link, link._delList.pop());
+        remove(link, link._delList.pop());
     }
+    link._lock = false;
 }
 
 function GetFirst(link = null){
@@ -175,4 +196,4 @@ function LinkCompare(link = null, callback = null){
     });
 }
 
-export {Link, LinkNode, NewLink, GetFirst, GetLast, GetLinkData, GetLinkSize, PushToLink, RemoveByKeyId, LinkIterator, LinkCompare}
+export {Link, LinkNode, NewLink, GetFirst, GetLast, GetLinkData, GetLinkSize, PushToLink, InsertToLink, RemoveByKeyId, LinkIterator, LinkCompare}

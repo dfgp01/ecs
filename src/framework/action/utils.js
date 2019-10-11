@@ -1,8 +1,8 @@
 import { isStop, isStart, actionStart, actionStop } from './base';
-import { PushToLink, RemoveByKeyId } from '../foundation/structure/link';
+import { PushToLink, RemoveByKeyId, NewLink } from '../foundation/structure/link';
 
 
-var actionList = new Link();
+var actionList = NewLink();
 function GetRunnigActionList(){
     return actionList;
 }

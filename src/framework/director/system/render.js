@@ -1,4 +1,3 @@
-import { System } from "../../foundation/structure/ecs";
 import { GetDisplayList } from "../../component/view/component";
 import { LinkIterator } from "../../foundation/structure/link";
 import { GetPos } from "../../component/pos/utils";
@@ -6,6 +5,8 @@ import { UpdateRectPosByUnit, GetRectStartPos } from "../../foundation/geometric
 import { GetCamera } from "../world/res";
 import { IsInCamera } from "../../component/camera/utils";
 import { ToLocatePos } from "../../foundation/geometric/point";
+import { drawImage, drawRect } from "../../foundation/engine/h5/render";
+import { System } from "../../foundation/structure/ecs";
 
 /**
  * 渲染系统，逻辑步骤：
@@ -69,9 +70,11 @@ function drawFrameInCamera(displayTuple = null){
     let screenPos = ToLocatePos(
         GetRectStartPos(displayArea),
         GetRectStartPos(camera.rect));
-    DrawFrame(displayTuple.spriteFrame,
-        screenPos.x, screenPos.y,
-        GetRectWidth(displayArea), GetRectHeight(displayArea));
+
+    let textureArea = displayTuple.spriteFrame.textureArea;
+    drawImage(displayTuple.spriteFrame.bitmapData,
+        textureArea.x, textureArea.y, textureArea.width, textureArea.height,
+        screenPos.x, screenPos.y, GetRectWidth(displayArea), GetRectHeight(displayArea));
 }
 
 function drawRectInCamera(displayArea = null){
@@ -83,7 +86,7 @@ function drawRectInCamera(displayArea = null){
     let screenPos = ToLocatePos(
         GetRectStartPos(displayArea), 
         GetRectStartPos(camera.rect));
-    DrawRect(
+    drawRect(
         screenPos.x, screenPos.y,
         GetRectWidth(displayArea), GetRectHeight(displayArea));
 }

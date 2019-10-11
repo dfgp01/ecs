@@ -1,6 +1,7 @@
 import { SetPos } from "../pos/utils";
 import { NewRect, UpdateRectPosByUnit } from "../../foundation/geometric/rect";
 import { ToLocatePos } from "../../foundation/geometric/point";
+import { Entity } from "../../foundation/structure/ecs";
 
 
 /**

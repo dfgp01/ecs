@@ -1,9 +1,9 @@
 import data from './data';
-import { StartGameTest } from './framework/director/utils/game';
+import { StartTest } from './framework/director/utils/game';
 import { NewPos } from './framework/foundation/geometric/point';
 import { NewLineWithPos } from './framework/foundation/geometric/line';
 import { InterSectionPos } from './framework/foundation/geometric/utils';
-import { DrawCircle } from './framework/director/utils/render';
+import { DrawCircle, DrawLine } from './framework/director/utils/render';
 
 /**
  *  2019.10.09
@@ -66,5 +66,5 @@ class MyScene {
 
 (function (){
     console.log(options);
-    StartGameTest(options, new MyScene());
+    StartTest(options, new MyScene());
 })()

@@ -31,17 +31,4 @@ function AddSystem(system = null){
     getSystemList().push(system);
 }
 
-
-/**
- * TODO 临时的，用于测试，用完即删
- */
-function toCanvasPos(camera = null, pos = null){
-    return ToLocatePos(pos, GetRectStartPos(camera.rect));
-}
-function DrawLine(camera = null, line = null){
-    let start = toCanvasPos(camera, GetStartPos(line));
-    let end = toCanvasPos(camera, GetEndPos(line));
-    canvasDrawLine(start.x, start.y, end.x, end.y);
-}
-
-export {StartGame, Stop, FixInWorld, IsPosInStage, IsRectInStage, AddSystem, DrawLine}
+export {FixInWorld, IsPosInStage, IsRectInStage, AddSystem}
