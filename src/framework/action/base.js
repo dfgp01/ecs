@@ -21,10 +21,10 @@ class Action extends Tuple {
         this.entityId = entityId;   //所属者
         this.state = ACTION_STATE_END;
     }
-    onStart(){}
-    onUpdate(dt = 0){}
+    // onStart(){}
+    // onUpdate(dt = 0){}
+    // onEnd(){}
     isEnd(){    return false;    }
-    onEnd(){}
     onStop(){   this.onEnd();   }
 }
 

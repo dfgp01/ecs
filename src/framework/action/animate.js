@@ -55,7 +55,7 @@ class SetFrameAction extends Action {
  * 1.停在最后一帧
  * 2.返回到第一帧
  */
-function CreateAnimateAction(type = ANIMATE_TYPE_NORMAL, entityId = 0, animateFrames = null){
+function CreateAnimateAction(type = 0, entityId = 0, animateFrames = null){
     switch(type){
         case ANIMATE_TYPE_NORMAL:
         return createAnimate(entityId, animateFrames);

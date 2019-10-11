@@ -1,5 +1,5 @@
 import { NewPos, NewVec } from "../../foundation/geometric/point";
-import { PushToLink, GetLinkData, NewLink } from "../../foundation/structure/link";
+import { PushToLink, GetLinkData, NewLink, RemoveByKeyId } from "../../foundation/structure/link";
 import { Component } from "../../foundation/structure/ecs";
 
 /**
@@ -20,13 +20,17 @@ function createPosComponent(entityId = 0) {
     return com;
 }
 
-function getPosComponent(entityId = 0) {
+function GetPosComponent(entityId = 0) {
     let com = GetLinkData(posComs, entityId);
     return com ? com : createPosComponent(entityId);
 }
 
-function getPosComponentList(){
+function GetPosComponentList(){
     return posComs;
 }
 
-export{ getPosComponent, getPosComponentList}
+function RemovePosComponent(entityId = 0){
+    RemoveByKeyId(posComs, entityId);
+}
+
+export{ GetPosComponent, GetPosComponentList, RemovePosComponent}

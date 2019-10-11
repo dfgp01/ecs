@@ -1,6 +1,6 @@
 import { System } from "../../foundation/structure/ecs";
 import { LinkIterator } from "../../foundation/structure/link";
-import { GetPosComponentList } from "../../component/pos/utils";
+import { GetPosComponentList } from "../../component/pos/component";
 
 /**
  * 2019.09.29
