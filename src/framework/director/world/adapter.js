@@ -1,6 +1,8 @@
 import { createSpriteFrame, getSpriteFrameByName } from "../../foundation/structure/frame";
 import { NewCamera } from "../../component/camera/utils";
 import { CreateAnimateFrame, CreateAnimateAction } from "../../action/animate";
+import { NewTileMap } from "../../component/tile/tilemap";
+import { IteratorGridmap } from "../../foundation/structure/gridmap";
 
 /**
  * 创建精灵帧
@@ -80,7 +82,7 @@ function createTileMapWithData(options = null, initHandler = null){
     if(initHandler){
         IteratorGridmap(tilemap.gridmap, grid => {
             let val = options.data[grid.rowIndex * columns + grid.colIndex];
-            initHandler(val, grid);
+            initHandler(val, tilemap, grid);
         });
     }
     return tilemap;

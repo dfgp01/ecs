@@ -3,7 +3,9 @@ import { StartTest } from './framework/director/utils/game';
 import { NewPos } from './framework/foundation/geometric/point';
 import { NewLineWithPos } from './framework/foundation/geometric/line';
 import { InterSectionPos } from './framework/foundation/geometric/utils';
-import { DrawCircle, DrawLine } from './framework/director/utils/render';
+import { DrawCircle, DrawLine, DrawRect } from './framework/director/utils/render';
+import { GetGridCenter } from './framework/component/tile/tilemap';
+import { GetGridWidth, GetGridHeight } from './framework/foundation/structure/gridmap';
 
 /**
  *  2019.10.09
@@ -11,48 +13,15 @@ import { DrawCircle, DrawLine } from './framework/director/utils/render';
  */
 
 //谨记数据驱动
-var options = {
-    debug : false,
-    fps : data.fps,
-    screen : {
-        width : data.screen.width,
-        height : data.screen.height
-    },
-    stage : {
-        width : data.stage.width,
-        height : data.stage.height
-    },
-    camera : {
-        x : data.camera.x,
-        y : data.camera.y
-    },
-    mousedownHandler : mousedownHandler,
-    mouseupHandler : mouseupHandler
-}
+var options = Object.assign(data, {
+    debug : false
+});
+options.tilemap.initHandler = initHandler;
 
-var startPos;
-var line1;
-var line2;
-
-function mousedownHandler(x = 0, y = 0){
-    startPos = NewPos(x, y);
-}
-function mouseupHandler(x = 0, y = 0){
-    if(!startPos){
-        return;
-    }
-    if(!line1){
-        line1 = NewLineWithPos(startPos.x, startPos.y, x, y);
-    }else{
-        line2 = NewLineWithPos(startPos.x, startPos.y, x, y);
-    }
-    DrawLine(startPos.x, startPos.y, x, y);
-    if(line1 && line2){
-        let pos = InterSectionPos(line1, line2);
-        console.log(pos);
-        DrawCircle(pos.x, pos.y, 10);
-    }
-    startPos = null;
+function initHandler(val = 0, tilemap = null, grid = null){
+    let pos = GetGridCenter(tilemap, grid);
+    console.log(pos.x, pos.y);
+    DrawRect(pos.x, pos.y, GetGridWidth(tilemap.gridmap), GetGridHeight(tilemap.gridmap));
 }
 
 class MyScene {
