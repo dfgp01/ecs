@@ -47,7 +47,7 @@ function NewInnerRect(rect1 = null, rect2 = null){
     let r1x2 = end1.x;
     let r2x2 = end2.x;
     let minX2 = r1x2 < r2x2 ? r1x2 : r2x2;
-    if(minX2 > maxX1){
+    if(minX2 < maxX1){
         return null;
     }
 
@@ -57,7 +57,7 @@ function NewInnerRect(rect1 = null, rect2 = null){
     let r1y2 = end1.y;
     let r2y2 = end2.y;
     let minY2 = r1y2 < r2y2 ? r1y2 : r2y2;
-    if(minY2 > maxY1){
+    if(minY2 < maxY1){
         return null;
     }
 

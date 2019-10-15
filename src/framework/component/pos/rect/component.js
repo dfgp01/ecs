@@ -22,14 +22,6 @@ function UpdateRectPosOffset(rectPosTuple = null, xOffset = 0, yOffset = 0){
     rectPosTuple.offset.y = yOffset;
 }
 
-/**
- * 修复位置，根据rect的中心位置修复unit.pos
- */
-function FixUnitPos(rectPosTuple = null, rectX = 0, rectY = 0){
-    rectPosTuple.unitPos.x = rectX - rectPosTuple.offset.x;
-    rectPosTuple.unitPos.y = rectY - rectPosTuple.offset.y;
-}
-
 function GetRectUnitPos(rectPosTuple = null){
     return rectPosTuple.unitPos;
 }
@@ -62,6 +54,6 @@ function GetRectPosEnd(rect = null){
 }
 
 export{
-    NewRectPosTuple, UpdateRectPosOffset, FixUnitPos,
+    NewRectPosTuple, UpdateRectPosOffset,
     GetRectUnitPos, GetRectPosOffset, GetRectPosCenter, GetRectPosStart, GetRectPosEnd
 }

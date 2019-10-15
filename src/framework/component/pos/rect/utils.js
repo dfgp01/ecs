@@ -29,7 +29,7 @@ function NewInnerRect(rectPosTuple1 = null, rectPosTuple2 = null){
     let r1x2 = end1.x;
     let r2x2 = end2.x;
     let minX2 = r1x2 < r2x2 ? r1x2 : r2x2;
-    if(minX2 > maxX1){
+    if(minX2 < maxX1){
         return null;
     }
 
@@ -39,7 +39,7 @@ function NewInnerRect(rectPosTuple1 = null, rectPosTuple2 = null){
     let r1y2 = end1.y;
     let r2y2 = end2.y;
     let minY2 = r1y2 < r2y2 ? r1y2 : r2y2;
-    if(minY2 > maxY1){
+    if(minY2 < maxY1){
         return null;
     }
 
@@ -63,6 +63,14 @@ function IsRectsCross(rectPosTuple1 = null, rectPosTuple2 = null){
     return rect ? true : false;
 }
 
+
+/**
+ * 修复位置，根据rect的中心位置修复unit.pos
+ */
+function FixUnitPos(rectPosTuple = null, rectX = 0, rectY = 0){
+    rectPosTuple.unitPos.x = rectX - rectPosTuple.offset.x;
+    rectPosTuple.unitPos.y = rectY - rectPosTuple.offset.y;
+}
 
 /**
  * inner.rect不准越出outter.rect，修正innrer.pos位置
@@ -104,7 +112,7 @@ function IsPosInRect(x = 0, y = 0, rectPosTuple = null){
         && y >= startPos.y && y <= endPos.y;
 }
 
-export {NewInnerRect, IsRectsCross, FixInRect, IsPosInRect}
+export {NewInnerRect, IsRectsCross, FixUnitPos, FixInRect, IsPosInRect}
 
 //----------------- 以下待定
 

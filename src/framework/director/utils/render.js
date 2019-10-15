@@ -1,5 +1,7 @@
-import { drawImage, drawRect, drawLine, drawCircle } from "../../foundation/engine/h5/render";
+import { drawImage, drawLine, drawCircle } from "../../foundation/engine/h5/render";
 import { getSpriteFrameByName } from "../../foundation/structure/frame";
+import { drawRectInCamera } from "../system/render";
+import { NewRect, UpdateRectCenterPos } from "../../foundation/geometric/rect";
 
  /**
   * 获取精灵帧
@@ -23,8 +25,13 @@ function DrawFrame(spriteFrame = null, x = 0, y = 0, width = 0, height = 0){
         x, y , width, height);
 }
 
+/**
+ * TODO 以后要变为rectPosTuple
+ */
 function DrawRect(x = 0, y = 0, width = 0, height = 0){
-    drawRect(x, y , width, height);
+    let rect = NewRect(0, 0, width, height);
+    UpdateRectCenterPos(rect, x, y);
+    drawRectInCamera(rect);
 }
 
 function DrawLine(x1 = 0, y1 = 0, x2 = 0, y2 = 0){

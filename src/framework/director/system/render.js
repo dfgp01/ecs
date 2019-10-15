@@ -1,10 +1,9 @@
 import { GetDisplayList } from "../../component/view/component";
 import { LinkIterator } from "../../foundation/structure/link";
 import { GetPos } from "../../component/pos/utils";
-import { UpdateRectPosByUnit, GetRectStartPos } from "../../foundation/geometric/rect";
+import { UpdateRectPosByUnit, GetRectStartPos, GetRectWidth, GetRectHeight } from "../../foundation/geometric/rect";
 import { GetCamera } from "../world/res";
-import { IsInCamera } from "../../component/camera/utils";
-import { ToLocatePos } from "../../foundation/geometric/point";
+import { IsInCamera, ToScreenPos } from "../../component/camera/utils";
 import { drawImage, drawRect } from "../../foundation/engine/h5/render";
 import { System } from "../../foundation/structure/ecs";
 
@@ -67,9 +66,7 @@ function drawFrameInCamera(displayTuple = null){
         return;
     }
     //转为画布坐标
-    let screenPos = ToLocatePos(
-        GetRectStartPos(displayArea),
-        GetRectStartPos(camera.rect));
+    let screenPos = ToScreenPos(camera, GetRectStartPos(displayArea));
 
     let textureArea = displayTuple.spriteFrame.textureArea;
     drawImage(displayTuple.spriteFrame.bitmapData,
@@ -83,12 +80,10 @@ function drawRectInCamera(displayArea = null){
         return;
     }
     //转为画布坐标
-    let screenPos = ToLocatePos(
-        GetRectStartPos(displayArea), 
-        GetRectStartPos(camera.rect));
+    let screenPos = ToScreenPos(camera, GetRectStartPos(displayArea));
     drawRect(
         screenPos.x, screenPos.y,
         GetRectWidth(displayArea), GetRectHeight(displayArea));
 }
 
-export {GetRenderUpdateSystem, GetDrawRectSystem}
+export {GetRenderUpdateSystem, GetDrawRectSystem, drawFrameInCamera, drawRectInCamera}

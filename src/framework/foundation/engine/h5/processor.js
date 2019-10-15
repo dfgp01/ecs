@@ -70,13 +70,25 @@ function onKeyCallback(keyDownCallback = null, keyUpCallback = null){
     });
 }
 
+/**
+ * https://blog.csdn.net/qq_17616169/article/details/72833044
+ */
 function onMouseCallback(mousedownCallback = null, mouseupCallback = null){
     _engine.canvas.addEventListener("mousedown", event => {
-        mousedownCallback(event.x, event.y);
+        let rect = canvas.getBoundingClientRect();
+        let x = event.clientX - rect.left * (canvas.width / rect.width);
+        let y = event.clientY - rect.top * (canvas.height / rect.height);
+        mousedownCallback(x, y);
     });
     _engine.canvas.addEventListener("mouseup", event => {
-        mouseupCallback(event.x, event.y);
+        let rect = canvas.getBoundingClientRect();
+        let x = event.clientX - rect.left * (canvas.width / rect.width);
+        let y = event.clientY - rect.top * (canvas.height / rect.height);
+        mouseupCallback(x, y);
     });
+    // _engine.canvas.addEventListener("click", event => {
+    //     console.log(event.x, event.y);
+    // });
     //_engine.canvas.addEventListener("mousemove",doMouseMove,false);
     //_engine.canvas.addEventListener("mouseout",doMouseOut,false);
 }
