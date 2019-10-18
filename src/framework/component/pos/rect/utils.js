@@ -1,4 +1,4 @@
-import { GetRectPosStart, GetRectPosEnd, NewRectPosTuple, FixUnitPos, GetRectPosCenter } from "./component";
+import { GetRectPosStart, GetRectPosEnd, NewRectPosTuple, GetRectPosCenter } from "./component";
 import { NewPos } from "../../../foundation/geometric/point";
 import { NewRect, GetRectHalfWidth, GetRectHalfHeight } from "../../../foundation/geometric/rect";
 
@@ -45,7 +45,10 @@ function NewInnerRect(rectPosTuple1 = null, rectPosTuple2 = null){
 
     let width = minX2 - maxX1;
     let height = minY2 - maxY1;
-    let rect = NewRect(width, height);
+    let rect = NewRect(0, 0, width, height);
+    if(!rect){
+        return null;
+    }
 
     return NewRectPosTuple(
         NewPos(

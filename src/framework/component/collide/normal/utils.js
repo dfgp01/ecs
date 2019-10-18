@@ -1,7 +1,7 @@
-import { PushToLink, RemoveByKeyId, Link } from '../../../base/structure/link';
 import { Collider } from '../base';
+import { NewLink, PushToLink, RemoveByKeyId } from '../../../foundation/structure/link';
 
-var colliderList = new Link();
+var colliderList = NewLink();
 function GetNormalColliderList(){
     return colliderList;
 }

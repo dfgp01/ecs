@@ -3,6 +3,7 @@ import { initCanvas } from "../../foundation/engine/h5/model";
 import { onKeyCallback, onMouseCallback } from "../../foundation/engine/h5/processor";
 import { NewCamera } from "../../component/camera/utils";
 import { createTileMapWithData } from "./adapter";
+import { OpenCollider } from "../../component/collide/utils";
 
 /**
  * 通过参数配置初始化系统资源
@@ -30,7 +31,7 @@ function initGame(options = null) {
 
     //开启碰撞系统
     if(options.collide){
-        //OpenCollider(options.collide);
+        OpenCollider(options.collide);
 
         // if(options.useTileCombine){
         //     let resultNodes = CreateCombineNodes(tilemap, collide.boxHandler);

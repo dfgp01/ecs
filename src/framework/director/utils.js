@@ -24,11 +24,4 @@ function IsRectInStage(targetRect = null){
     return IsRectsCross(targetRect, getstageRect());
 }
 
-function AddSystem(system = null){
-    if(!system){
-        return;
-    }
-    getSystemList().push(system);
-}
-
-export {FixInWorld, IsPosInStage, IsRectInStage, AddSystem}
+export {FixInWorld, IsPosInStage, IsRectInStage}

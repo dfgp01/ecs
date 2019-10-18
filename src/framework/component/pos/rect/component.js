@@ -6,7 +6,6 @@ import { GetRectHalfWidth, GetRectHalfHeight } from "../../../foundation/geometr
  */
 class RectPosTuple{
     constructor(unitPos = null, xOffset = 0, yOffset = 0, rect = null){
-        super();
         this.unitPos = unitPos;
         this.offset = NewVec(xOffset, yOffset);
         this.rect = rect;
@@ -14,6 +13,9 @@ class RectPosTuple{
 }
 
 function NewRectPosTuple(unitPos = null, xOffset = 0, yOffset = 0, rect = null) {
+    if(!unitPos || !rect){
+        return null;
+    }
     return new RectPosTuple(unitPos, xOffset, yOffset, rect);
 }
 
@@ -38,18 +40,18 @@ function GetRectPosCenter(rectPosTuple = null){
 }
 
 function GetRectPosStart(rectPosTuple = null){
-    let pos = GetRectPosTupleCenter(rectPosTuple);
+    let pos = GetRectPosCenter(rectPosTuple);
     return NewPos(
-        pos.x - GetRectHalfWidth(rect),
-        pos.y - GetRectHalfHeight(rect)
+        pos.x - GetRectHalfWidth(rectPosTuple.rect),
+        pos.y - GetRectHalfHeight(rectPosTuple.rect)
     );
 }
 
-function GetRectPosEnd(rect = null){
-    let pos = GetRectPosTupleCenter(rectPosTuple);
+function GetRectPosEnd(rectPosTuple = null){
+    let pos = GetRectPosCenter(rectPosTuple);
     return NewPos(
-        pos.x + GetRectHalfWidth(rect),
-        pos.y + GetRectHalfHeight(rect)
+        pos.x + GetRectHalfWidth(rectPosTuple.rect),
+        pos.y + GetRectHalfHeight(rectPosTuple.rect)
     );
 }
 

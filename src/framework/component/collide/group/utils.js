@@ -1,5 +1,5 @@
 import { Collider } from "../base";
-import { RemoveByKeyId, PushToLink } from "../../../foundation/structure/link";
+import { RemoveByKeyId, PushToLink, NewLink } from "../../../foundation/structure/link";
 
 class GroupPair {
     constructor(type1 = 0, team1 = null, type2 = 0, team2 = null){
@@ -37,7 +37,7 @@ function RemoveGroupCollider(colliderId = 0, type = 0) {
     RemoveByKeyId(team, colliderId);
 }
 
-var pairs = new Link();
+var pairs = NewLink();
 function GetGroupPairList(){
     return pairs
 }

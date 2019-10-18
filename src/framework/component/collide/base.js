@@ -1,4 +1,5 @@
-import { Entity, System } from "../../base/ecs";
+import { Entity, System } from "../../foundation/structure/ecs";
+import { IsRectsCross } from "../../foundation/geometric/utils";
 
 /**
  * 碰撞元件

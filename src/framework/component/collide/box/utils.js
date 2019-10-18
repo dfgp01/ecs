@@ -1,5 +1,5 @@
 import { Collider } from "../base";
-import { PushToLink, RemoveByKeyId } from "../../../foundation/structure/link";
+import { PushToLink, RemoveByKeyId, NewLink } from "../../../foundation/structure/link";
 
 class BodyCollider extends Collider {
     constructor(entityId = 0, rect = null, tag = 0){
@@ -8,7 +8,7 @@ class BodyCollider extends Collider {
     }
 }
 
-var bodyColliderList = new Link();
+var bodyColliderList = NewLink();
 function GetBodyColliderList(){
     return bodyColliderList;
 }
@@ -24,7 +24,7 @@ function RemoveBodyCollider(colliderId = 0){
 }
 
 
-var blockColliderList = new Link();
+var blockColliderList = NewLink();
 function GetBlockColliderList(){
     return blockColliderList;
 }

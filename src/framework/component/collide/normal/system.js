@@ -1,6 +1,6 @@
-import { LinkCompare } from '../../../base/structure/link';
 import { GetNormalColliderList } from './utils';
 import { ColliderSystem } from '../base';
+import { LinkCompare } from '../../../foundation/structure/link';
 
 /**
  * 独立检测系统

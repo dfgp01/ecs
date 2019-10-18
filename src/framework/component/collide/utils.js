@@ -1,8 +1,9 @@
 import { GetGroupColliderSystem } from './group/system';
 import { AddGroupPair, AddGroupCollider, RemoveGroupCollider } from './group/utils';
-import { GetBoxColliderSystem } from './box/system';
 import { AddBodyCollider, AddBlockCollider, RemoveBodyCollider, RemoveBlockCollider } from './box/utils';
 import { AddNormalCollider, RemoveNormalCollider } from './normal/utils';
+import { AddSystem } from '../../director/system/run';
+import { GetBoxColliderSystem } from './box2/system';
 
 /**
  * 启用碰撞检测机制
@@ -36,9 +37,9 @@ function OpenCollider(options = null){
             AddGroupPair(pair[0], pair[1]);
         });
     }
-    cfg.sysList.push(GetNormalColliderSystem(options.callback));
+    //cfg.sysList.push(GetNormalColliderSystem(options.callback));
     cfg.sysList.forEach(sys => {
-        AddLogicSystems(sys);
+        AddSystem(sys);
     });
 }
 

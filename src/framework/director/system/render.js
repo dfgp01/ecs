@@ -1,11 +1,13 @@
 import { GetDisplayList } from "../../component/view/component";
 import { LinkIterator } from "../../foundation/structure/link";
 import { GetPos } from "../../component/pos/utils";
-import { UpdateRectPosByUnit, GetRectStartPos, GetRectWidth, GetRectHeight } from "../../foundation/geometric/rect";
+import { GetRectWidth, GetRectHeight } from "../../foundation/geometric/rect";
 import { GetCamera } from "../world/res";
 import { IsInCamera, ToScreenPos } from "../../component/camera/utils";
-import { drawImage, drawRect } from "../../foundation/engine/h5/render";
+import { drawImage, drawRect, clear } from "../../foundation/engine/h5/render";
 import { System } from "../../foundation/structure/ecs";
+import { GetBlockColliderList, GetBodyColliderList } from "../../component/collide/box2/utils";
+import { GetRectPosStart } from "../../component/pos/rect/component";
 
 /**
  * 渲染系统，逻辑步骤：
@@ -17,7 +19,7 @@ import { System } from "../../foundation/structure/ecs";
  */
 class RenderUpdateSystem extends System {
     onUpdate(dt = 0){
-        //canvasClear();
+        clear();
         LinkIterator(GetDisplayList(), displayTuple => {
             let pos = GetPos(displayTuple.entityId);
             UpdateRectPosByUnit(displayTuple.displayArea, pos.x, pos.y);
@@ -41,7 +43,10 @@ function GetRenderUpdateSystem(){
 class DrawRectSystem extends System {
     onUpdate(dt = 0){
         //DrawRect(GetCamera(), this._camera.rect);
-        LinkIterator(GetRectList(), collider => {
+        LinkIterator(GetBlockColliderList(), collider => {
+            drawRectInCamera(collider.rect);
+        });
+        LinkIterator(GetBodyColliderList(), collider => {
             drawRectInCamera(collider.rect);
         });
     }
@@ -74,16 +79,16 @@ function drawFrameInCamera(displayTuple = null){
         screenPos.x, screenPos.y, GetRectWidth(displayArea), GetRectHeight(displayArea));
 }
 
-function drawRectInCamera(displayArea = null){
+function drawRectInCamera(rectPosTuple = null){
     let camera = GetCamera();
-    if(!IsInCamera(camera, displayArea)){
+    if(!IsInCamera(camera, rectPosTuple)){
         return;
     }
     //转为画布坐标
-    let screenPos = ToScreenPos(camera, GetRectStartPos(displayArea));
+    let screenPos = ToScreenPos(camera, GetRectPosStart(rectPosTuple));
     drawRect(
         screenPos.x, screenPos.y,
-        GetRectWidth(displayArea), GetRectHeight(displayArea));
+        GetRectWidth(rectPosTuple.rect), GetRectHeight(rectPosTuple.rect));
 }
 
 export {GetRenderUpdateSystem, GetDrawRectSystem, drawFrameInCamera, drawRectInCamera}

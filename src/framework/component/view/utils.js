@@ -4,8 +4,8 @@ import { AddDisplay, RemoveDisplay } from "./component";
  * 切换显示帧
  * TODO 需要判断重复性
  */
-function SetFrame(entityId = 0, spriteFrame = null, displayArea = null){
-    AddDisplay(entityId, spriteFrame, displayArea);
+function SetFrame(entityId = 0, spriteFrame = null, xOffset = 0, yOffset = 0){
+    AddDisplay(entityId, spriteFrame, xOffset, yOffset);
 }
 
 /**

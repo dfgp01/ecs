@@ -29,4 +29,4 @@ function Move(entityId = 0, dx = 0, dy = 0){
     pos.y += dy;
 }
 
-export {SetPos, GetPos, GetVec, SetVec}
+export {SetPos, GetPos, GetVec, SetVec, Move}

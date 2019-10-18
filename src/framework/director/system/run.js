@@ -24,7 +24,8 @@ function initSystems(debug = false){
 
 var logicTick = 16;     //60fps
 var renderTick = 41;    //24fps
-var _t1, _t2 = 0;
+var _t1 = 0;
+var _t2 = 0;
 function runWithScene(scene){
     LinkIterator(logicSystems, system => {
         system.onStart();
@@ -35,7 +36,7 @@ function runWithScene(scene){
     scene.onStart();
 
     //main loop
-    runTick((dt)=>{
+    runTick(dt => {
         _t1 += dt;
         if(_t1 >= logicTick){
             _t1 -= logicTick;

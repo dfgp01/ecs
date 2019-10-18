@@ -1,5 +1,9 @@
 import { Component } from "../../foundation/structure/ecs";
 import { PushToLink, GetLinkData, RemoveByKeyId, NewLink } from "../../foundation/structure/link";
+import { NewRectPosTuple } from "../pos/rect/component";
+import { NewRect } from "../../foundation/geometric/rect";
+import { GetSpriteFrameWidth, GetSpriteFrameHeight } from "../../foundation/structure/frame";
+import { GetPos } from "../pos/utils";
 
 
 /**
@@ -52,8 +56,13 @@ function GetDisplayList(){
  * 加入渲染队列
  * @param {*} displayArea Rect类型
  */
-function AddDisplay(entityId = 0, spriteFrame = null, displayArea = null) {
-    let t = new DisplayTuple(entityId, spriteFrame, displayArea);
+function AddDisplay(entityId = 0, spriteFrame = null, xOffset = 0, yOffset = 0) {
+    let pos = GetPos(entityId);
+    let rectPos = NewRectPosTuple(pos, xOffset, yOffset,
+        NewRect(
+            GetSpriteFrameWidth(spriteFrame),
+            GetSpriteFrameHeight(spriteFrame)));
+    let t = new DisplayTuple(entityId, spriteFrame, rectPos);
     PushToLink(displayList, t);
     return t;
 }

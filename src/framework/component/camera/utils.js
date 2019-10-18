@@ -1,8 +1,9 @@
 import { SetPos } from "../pos/utils";
-import { NewRect, UpdateRectPosByUnit, GetRectStartPos } from "../../foundation/geometric/rect";
+import { NewRect } from "../../foundation/geometric/rect";
 import { ToLocatePos, NewPos } from "../../foundation/geometric/point";
 import { Entity } from "../../foundation/structure/ecs";
-import { IsRectsCross } from "../../foundation/geometric/utils";
+import { IsRectsCross } from "../pos/rect/utils";
+import { NewRectPosTuple, GetRectPosStart } from "../pos/rect/component";
 
 
 /**
@@ -18,9 +19,9 @@ class Camera extends Entity {
 
 function NewCamera(x = 0, y = 0, width = 0, height = 0){
     let camera = new Camera();
+    
     camera.pos = SetPos(camera.id, x, y);
-    camera.rect = NewRect(0, 0, width, height);
-    UpdateRectPosByUnit(camera.rect, x, y);
+    camera.rect = NewRectPosTuple(camera.pos, 0, 0, NewRect(0, 0, width, height));
     return camera;
 }
 
@@ -34,14 +35,14 @@ function IsInCamera(camera = null, rect = null){
  * targetPos，如果是rect，请用startPos
  */
 function ToScreenPos(camera = null, targetPos = null){
-    return ToLocatePos(targetPos, GetRectStartPos(camera.rect));
+    return ToLocatePos(targetPos, GetRectPosStart(camera.rect));
 }
 
 /**
  * 镜头坐标转为全局坐标
  */
 function ToWorldPos(camera = null, screenX = 0, screenY = 0){
-    let start = GetRectStartPos(camera.rect);
+    let start = GetRectPosStart(camera.rect);
     return NewPos(
         start.x + screenX,
         start.y + screenY

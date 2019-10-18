@@ -22,6 +22,9 @@ class Rectangle {
  * 此方法一般由collider调用
  */
 function NewRect(xOffset = 0, yOffset = 0, width = 0, height = 0){
+    if(width==0 || height==0){
+        return null;
+    }
     let offset = NewVec(xOffset, yOffset);
     return new Rectangle(offset, width, height, NewPos());
 }
