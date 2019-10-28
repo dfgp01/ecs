@@ -1,7 +1,25 @@
 import { GetRectPosStart, GetRectPosEnd, NewRectPosTuple, GetRectPosCenter } from "./component";
 import { NewPos } from "../../../foundation/geometric/point";
 import { NewRect, GetRectHalfWidth, GetRectHalfHeight } from "../../../foundation/geometric/rect";
+import { Abs } from "../../../foundation/geometric/math";
 
+
+/**
+ * 目前的机制，可以使用矩形中心点之间的距离判断是否相交
+ */
+function IsRectsCross(rectPosTuple1 = null, rectPosTuple2 = null){
+    let pos1 = GetRectPosCenter(rectPosTuple1);
+    let pos2 = GetRectPosCenter(rectPosTuple2);
+    let w = Abs(pos1.x - pos2.x);
+    if(w > GetRectHalfWidth(rectPosTuple1.rect) + GetRectHalfWidth(rectPosTuple2.rect)){
+        return false;
+    }
+    let h = Abs(pos1.y - pos2.y);
+    if(h > GetRectHalfHeight(rectPosTuple1.rect) + GetRectHalfHeight(rectPosTuple2.rect)){
+        return false;
+    }
+    return true;
+}
 
 /**
  * 两个矩形是否相交，基础碰撞检测（需要先更新坐标）
@@ -16,6 +34,9 @@ import { NewRect, GetRectHalfWidth, GetRectHalfHeight } from "../../../foundatio
  *  目前，即使两边重叠，也不算相交，这样能避免很多问题
  */
 function NewInnerRect(rectPosTuple1 = null, rectPosTuple2 = null){
+    if(!IsRectsCross(rectPosTuple1, rectPosTuple2)){
+        return null;
+    }
 
     let start1 = GetRectPosStart(rectPosTuple1);
     let start2 = GetRectPosStart(rectPosTuple2);
@@ -29,19 +50,14 @@ function NewInnerRect(rectPosTuple1 = null, rectPosTuple2 = null){
     let r1x2 = end1.x;
     let r2x2 = end2.x;
     let minX2 = r1x2 < r2x2 ? r1x2 : r2x2;
-    if(minX2 < maxX1){
-        return null;
-    }
 
     let r1y1 = start1.y;
     let r2y1 = start2.y;
     let maxY1 = r1y1 > r2y1 ? r1y1 : r2y1;
+
     let r1y2 = end1.y;
     let r2y2 = end2.y;
     let minY2 = r1y2 < r2y2 ? r1y2 : r2y2;
-    if(minY2 < maxY1){
-        return null;
-    }
 
     let width = minX2 - maxX1;
     let height = minY2 - maxY1;
@@ -56,16 +72,6 @@ function NewInnerRect(rectPosTuple1 = null, rectPosTuple2 = null){
             maxY1 + GetRectHalfHeight(rect)
         ), 0, 0, rect);
 }
-
-/**
- * 判断是否相交
- * 暂时使用NewInnerRect，后期看情况是否需要手动回收资源 
- */
-function IsRectsCross(rectPosTuple1 = null, rectPosTuple2 = null){
-    let rect = NewInnerRect(rectPosTuple1, rectPosTuple2);
-    return rect ? true : false;
-}
-
 
 /**
  * 修复位置，根据rect的中心位置修复unit.pos

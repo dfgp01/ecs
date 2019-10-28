@@ -14,6 +14,10 @@ class Collider extends Entity {
     }
 }
 
+function GetRectPosTuple(collider = null){
+    return collider.rect;
+}
+
 
 /**
  * 碰撞检测主系统

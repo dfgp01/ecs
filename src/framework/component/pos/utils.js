@@ -24,9 +24,14 @@ function GetVec(entityId = 0){
 
 
 function Move(entityId = 0, dx = 0, dy = 0){
-    let pos = GetPosComponent(entityId).pos;
-    pos.x += dx;
-    pos.y += dy;
+    // let pos = GetPosComponent(entityId).pos;
+    // pos.x += dx;
+    // pos.y += dy;
+    let com = GetPosComponent(entityId);
+    com.vec.x = dx;
+    com.vec.y = dy;
+    com.pos.x += dx;
+    com.pos.y += dy;
 }
 
 export {SetPos, GetPos, GetVec, SetVec, Move}

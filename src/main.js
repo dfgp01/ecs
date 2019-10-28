@@ -85,7 +85,7 @@ function keyUpHanler(code = 0){
     }
 }
 
-var d = 3;
+var d = 2;
 var dx = 0;
 var dy = 0;
 class MyScene {
