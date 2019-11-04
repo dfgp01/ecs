@@ -7,16 +7,13 @@ import { PushToLink, NewLink, LinkIterator, InsertToLink } from "../../foundatio
 /**
  * 主系统列表
  */
-var posSys = GetPosUpdateSystem();
-var logicSystems = null;
-var renderSystems = null;
+var logicSystems = NewLink();
+var renderSystems = NewLink();
 function initSystems(debug = false){
-    logicSystems = NewLink();
-    PushToLink(logicSystems, GetActionSystem());
-    renderSystems = NewLink();
-    PushToLink(renderSystems, GetRenderUpdateSystem());
+    InsertToLink(logicSystems, GetActionSystem());
+    InsertToLink(logicSystems, GetPosUpdateSystem());
 
-    //初始默认系统
+    PushToLink(renderSystems, GetRenderUpdateSystem());
     if(debug){
         PushToLink(renderSystems, GetDrawRectSystem());
     }

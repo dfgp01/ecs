@@ -19,9 +19,8 @@ class Camera extends Entity {
 
 function NewCamera(x = 0, y = 0, width = 0, height = 0){
     let camera = new Camera();
-    
     camera.pos = SetPos(camera.id, x, y);
-    camera.rect = NewRectPosTuple(camera.pos, 0, 0, NewRect(0, 0, width, height));
+    camera.rect = NewRectPosTuple(camera.id, 0, 0, NewRect(0, 0, width, height));
     return camera;
 }
 

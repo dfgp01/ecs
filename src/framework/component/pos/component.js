@@ -25,12 +25,8 @@ function GetPosComponent(entityId = 0) {
     return com ? com : createPosComponent(entityId);
 }
 
-function GetPosComponentList(){
-    return posComs;
-}
-
 function RemovePosComponent(entityId = 0){
     RemoveByKeyId(posComs, entityId);
 }
 
-export{ GetPosComponent, GetPosComponentList, RemovePosComponent}
+export{ GetPosComponent, RemovePosComponent}

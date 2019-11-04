@@ -35,9 +35,10 @@ class Component {
  * TODO 暂时没什么用
  */
 class Tuple {
-	constructor(priority = 0){
+	constructor(entityId = 0, priority = 0){
+		this.id = NewEntityId();
+		this.entityId = entityId;
 		this.priority = priority;	//给link使用
-		this.id = NewEntityId();	//给link使用
 	}
 }
 
@@ -46,8 +47,8 @@ class Tuple {
 */
 class System {
 	constructor(priority = 0){
-		this.priority = priority;	//给link使用
 		this.id = NewEntityId();
+		this.priority = priority;	//给link使用
 	}
     onStart(){}
     onUpdate(dt = 0){}

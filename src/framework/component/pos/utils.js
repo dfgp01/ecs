@@ -1,4 +1,5 @@
 import { GetPosComponent } from './component';
+import { RemoveByKeyId, NewLink, GetLinkData, PushToLink } from '../../foundation/structure/link';
 
 function SetPos(entityId = 0, x = 0, y = 0){
     let pos = GetPosComponent(entityId).pos;
@@ -22,16 +23,21 @@ function GetVec(entityId = 0){
     return GetPosComponent(entityId).vec;
 }
 
-
-function Move(entityId = 0, dx = 0, dy = 0){
-    // let pos = GetPosComponent(entityId).pos;
-    // pos.x += dx;
-    // pos.y += dy;
-    let com = GetPosComponent(entityId);
-    com.vec.x = dx;
-    com.vec.y = dy;
-    com.pos.x += dx;
-    com.pos.y += dy;
+var moveList = NewLink();
+function GetMoverList(){
+    return moveList;
 }
 
-export {SetPos, GetPos, GetVec, SetVec, Move}
+function AddMover(entityId = 0) {
+    let m = GetLinkData(moveList, entityId);
+    if(m){
+        return;
+    }
+    PushToLink(moveList, GetPosComponent(entityId));
+}
+
+function RemoveMover(entityId = 0) {
+    RemoveByKeyId(moveList, entityId);
+}
+
+export {SetPos, GetPos, GetVec, SetVec, GetMoverList, AddMover, RemoveMover}

@@ -1,4 +1,4 @@
-import { FixUnitPos, IsRectsCross } from "../../pos/rect/utils";
+import { FixUnitPos, IsRectsCross, FixUnitVec, IsRectsCrossWithVec } from "../../pos/rect/utils";
 import { GetArea, GetRectWidth, GetRectHeight, GetRectHalfHeight, GetRectHalfWidth } from "../../../foundation/geometric/rect";
 import { GetRectPosCenter, GetRectPosStart, GetRectPosEnd, GetRectUnitPos } from "../../pos/rect/component";
 import { System } from "../../../foundation/structure/ecs";
@@ -7,7 +7,6 @@ import { GetBodyColliderList, GetBlockColliderList } from "./utils";
 import { GetVec } from "../../pos/utils";
 import { NewPos } from "../../../foundation/geometric/point";
 import { Abs, Max, Min } from "../../../foundation/geometric/math";
-import { BlockCollider } from "../../x/collide/model";
 
 /**
  * 简易方案构想，目前机制：
@@ -16,6 +15,9 @@ import { BlockCollider } from "../../x/collide/model";
  *      若一边被收窄，还原另一边的活动
  */
 class BoxColliderSystem extends System {
+    constructor(){
+        super(900);
+    }
     onUpdate(dt = 0){
         LinkIterator(GetBodyColliderList(), body => {
             if(!bodyBefore(body)){
@@ -43,8 +45,8 @@ var minX = 0;
 var maxX = 0;
 var minY = 0;
 var maxY = 0;
-var lastBodyStart = null;
-var lastBodyEnd = null;
+var bodyStart = null;
+var bodyEnd = null;
 var blockStart = null;
 var blockEnd = null;
 var unitVec = null;
@@ -61,38 +63,27 @@ function bodyBefore(bodyCollider = null){
     }
     bodyHalfWidth = GetRectHalfWidth(bodyCollider.rect.rect);
     bodyHalfHeight = GetRectHalfHeight(bodyCollider.rect.rect);
-    let pos = GetRectPosCenter(bodyCollider.rect);
-    bodyX = pos.x;
-    bodyY = pos.y;
 
-    let start = GetRectPosStart(bodyCollider.rect);
-    lastBodyStart = NewPos(
-        start.x - unitVec.x,
-        start.y - unitVec.y
-    );
-    let end = GetRectPosEnd(bodyCollider.rect);
-    lastBodyEnd = NewPos(
-        end.x - unitVec.x,
-        end.y - unitVec.y
-    );
-    minX = end.x;
-    maxX = start.x;
-    minY = end.y;
-    maxY = start.y;
+    bodyStart = GetRectPosStart(bodyCollider.rect);
+    bodyEnd = GetRectPosEnd(bodyCollider.rect);
+    minX = bodyEnd.x + unitVec.x;
+    maxX = bodyStart.x + unitVec.x;
+    minY = bodyEnd.y + unitVec.y;
+    maxY = bodyStart.y + unitVec.y;
+
+    let p = GetRectPosCenter(bodyCollider.rect);
+    bodyX = p.x + unitVec.x;
+    bodyY = p.y + unitVec.y;
     return true;
 }
 
 function logic(bodyCollider = null, blockCollider = null){
-    if(!IsRectsCross(bodyCollider.rect, blockCollider.rect)){
+    if(!IsRectsCrossWithVec(bodyCollider.rect, blockCollider.rect)){
         return;
     }
-    blockBefore(blockCollider);
-    isLR() || isUD();
-}
-
-function blockBefore(blockCollider = null){
     blockStart = GetRectPosStart(blockCollider.rect);
     blockEnd = GetRectPosEnd(blockCollider.rect);
+    isLR() || isUD();
 }
 
 //可以实锤的左右关系
@@ -100,25 +91,13 @@ function isLR(){
     if(unitVec.x == 0){
         return false;
     }
-    if(!checkVEdge()){
+    //检查纵边有效性，踩线不算
+    let maxY1 = Max(bodyStart.y, blockStart.y);
+    let minY2 = Min(bodyEnd.y, blockEnd.y);
+    if(minY2 <= maxY1){
         return false;
     }
-    return minDistanceX();
-}
-
-/**
- * 检查纵边有效性，踩线不算
- */
-function checkVEdge() {
-    let maxY1 = Max(lastBodyStart.y, blockStart.y);
-    let minY2 = Min(lastBodyEnd.y, blockEnd.y);
-    return minY2 > maxY1;
-}
-
-/**
- * 计算x最新活动范围（最短距离）
- */
-function minDistanceX(){
+    //计算x最新活动范围（最短距离）
     if(unitVec.x > 0){
         if(blockStart.x < minX){
             minX = blockStart.x;
@@ -136,25 +115,13 @@ function isUD(){
     if(unitVec.y == 0){
         return false;
     }
-    if(!checkHEdge()){
+    //检查横边有效性，踩线不算
+    let maxX1 = Max(bodyStart.x, blockStart.x);
+    let minX2 = Min(bodyEnd.x, blockEnd.x);
+    if(minX2 <= maxX1){
         return false;
     }
-    return minDistanceY();
-}
-
-/**
- * 检查横边有效性，踩线不算
- */
-function checkHEdge() {
-    let maxX1 = Max(lastBodyStart.x, blockStart.x);
-    let minX2 = Min(lastBodyEnd.x, blockEnd.x);
-    return minX2 > maxX1;
-}
-
-/**
- * 计算x最新活动范围（最短距离）
- */
-function minDistanceY(){
+    //计算x最新活动范围（最短距离）
     if(unitVec.y > 0){
         if(blockStart.y < minY){
             minY = blockStart.y;
@@ -185,19 +152,7 @@ function bodyAfter(bodyCollider = null) {
     }else{
         y = bodyY;
     }
-    FixUnitPos(bodyCollider.rect, x, y);
-}
-
-/**
- * 检查纵边有效性，踩线不算
- *  vy==0，一定算数
- *  vy>0 且 block顶边要在Y活动范围内
- *  vy<0 且 block底边要在Y活动范围内
- */
-function checkVEdge_bk(){
-    return unitVec.y == 0 ||
-        (unitVec.y > 0 && blockStart.y < minY) ||
-        (unitVec.y < 0 && blockEnd.y > maxY);
+    FixUnitVec(bodyCollider.rect, x, y);
 }
 
 export {GetBoxColliderSystem}

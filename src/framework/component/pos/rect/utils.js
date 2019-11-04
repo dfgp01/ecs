@@ -21,6 +21,28 @@ function IsRectsCross(rectPosTuple1 = null, rectPosTuple2 = null){
     return true;
 }
 
+function IsRectsCrossWithVec(rectPosTuple1 = null, rectPosTuple2 = null) {
+    let rp1 = GetRectPosCenter(rectPosTuple1);
+    let pos1 = NewPos(
+        rp1.x + rectPosTuple1.unitVec.x,
+        rp1.y + rectPosTuple1.unitVec.y
+    );
+    let rp2 = GetRectPosCenter(rectPosTuple2);
+    let pos2 = NewPos(
+        rp2.x + rectPosTuple2.unitVec.x,
+        rp2.y + rectPosTuple2.unitVec.y
+    );
+    let w = Abs(pos1.x - pos2.x);
+    if(w > GetRectHalfWidth(rectPosTuple1.rect) + GetRectHalfWidth(rectPosTuple2.rect)){
+        return false;
+    }
+    let h = Abs(pos1.y - pos2.y);
+    if(h > GetRectHalfHeight(rectPosTuple1.rect) + GetRectHalfHeight(rectPosTuple2.rect)){
+        return false;
+    }
+    return true;
+}
+
 /**
  * 两个矩形是否相交，基础碰撞检测（需要先更新坐标）
  * 原理：
@@ -81,6 +103,11 @@ function FixUnitPos(rectPosTuple = null, rectX = 0, rectY = 0){
     rectPosTuple.unitPos.y = rectY - rectPosTuple.offset.y;
 }
 
+function FixUnitVec(rectPosTuple = null, rectX = 0, rectY = 0) {
+    rectPosTuple.unitVec.x = rectX - rectPosTuple.unitPos.x;
+    rectPosTuple.unitVec.y = rectY - rectPosTuple.unitPos.y;    
+}
+
 /**
  * inner.rect不准越出outter.rect，修正innrer.pos位置
  * inner和outter都是RectPosTuple
@@ -121,7 +148,7 @@ function IsPosInRect(x = 0, y = 0, rectPosTuple = null){
         && y >= startPos.y && y <= endPos.y;
 }
 
-export {NewInnerRect, IsRectsCross, FixUnitPos, FixInRect, IsPosInRect}
+export {NewInnerRect, IsRectsCross, IsRectsCrossWithVec, FixUnitPos, FixUnitVec, FixInRect, IsPosInRect}
 
 //----------------- 以下待定
 

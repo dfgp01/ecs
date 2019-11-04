@@ -1,59 +1,105 @@
-import * as cst from './const'
-import { GetPosComponent, SetPos } from '../common/pos/utils';
-import { GetCommandComponent } from '../common/command/utils';
-import { CreateUnit, GenUnit } from './unit';
-import { MoveAction } from '../common/action/other';
-import { Action } from '../common/base/action';
+import { Action } from "../framework/action/base";
+import { Move, GetVec, SetVec } from "../framework/component/pos/utils";
+import { RunAction, StopAction } from "../framework/action/utils";
+import { GetRectPosCenter } from "../framework/component/pos/rect/component";
+import { GetRectHalfHeight, GetRectHalfWidth } from "../framework/foundation/geometric/rect";
+import { Abs } from "../framework/foundation/geometric/math";
 
-//简单应付了事
-class CmdMoveAction extends MoveAction {
+class StatusChangerAction extends Action{
+    constructor(entityId = 0, priority = 0, moveDx = 0, jumpDy = 0, fallDy = 0, fallMaxDy = 0){
+        super(entityId, priority);
+        this.jumpDy = jumpDy;
+        this.fallAct = new FallAction(entityId, priority + 1, fallDy, fallMaxDy);
+        this.moveAct = new CMDMoveAction(entityId, priority + 1, moveDx);
+        this.status = 0;
+    }
     onStart(){
-        this._cmdCom = GetCommandComponent(this.entityId);
-        this._pos = GetPosComponent(this.entityId);
+        this.cmd = GetCmd(this.entityId);
+        RunAction(this.moveAct);
     }
     onUpdate(dt = 0){
-        let cmd = this._cmdCom.val;
-        let pos = this._pos;
-        if(cmd & cst.COMMAND_RIGHT) {
-            pos.x += this.dx;
-        }
-        else if(cmd & cst.COMMAND_LEFT) {
-            pos.x -= this.dx;
-        }
-        if(cmd & cst.COMMAND_DOWN) {
-            pos.y += this.dy;
-        }
-        else if(cmd & cst.COMMAND_UP) {
-            pos.y -= this.dy;
-        }
+        do{
+            if(!onLandFlag){
+                switchOnFall();
+                break;
+            }
+            //地面起跳
+            if(this.status == status_onLand && this.cmd & cmd_jump){
+                switchJump();
+                break;
+            }
+        }while(false);
+        onLandFlag = 0;
     }
 }
 
-class GenUnitAction extends Action {
-    constructor(entityId = 0, dataKey = "", x = 0, y = 0) {
-        super(entityId);
-        this.dataKey = dataKey;
-        this.x = x;
-        this.y = y;
+const onLandFlag = 0;
+const status_onLand = 1;
+const status_onFall = 2;
+
+var sca = null;
+function GetStatusChangerAction(entityId = 0, moveDx = 0, jumpDy = 0, fallDy = 0, fallMaxDy = 0) {
+    if(!sca){
+        sca = new StatusChangerAction(entityId, 0, moveDx, jumpDy, fallDy, fallMaxDy);
     }
-    onStart(){
-        let pos = GetPosComponent(this.entityId);
-        let uid = CreateUnit(this.dataKey);
-        SetPos(uid, pos.x + this.x, pos.y + this.y);
+    return sca;
+}
+
+function switchOnland() {
+    sca.status = status_onLand;
+    let v = GetVec(sca.entityId);
+    SetVec(sca.entityId, v.x, 0);
+    StopAction(sca.fallAct);
+}
+
+function switchOnFall() {
+    sca.status = status_onFall;
+    RunAction(sca.fallAct);
+}
+
+function switchJump() {
+    let v = GetVec(sca.entityId);
+    SetVec(sca.entityId, v.x, sca.jumpDy);
+    switchOnFall();
+}
+
+function CollideCallback(collider1 = null, collider2 = null) {
+    let bodyPos, blockPos;
+    if(collider1.tag & tag_body){
+        bodyPos = GetRectPosCenter(collider1.rect);
+        blockPos = GetRectPosCenter(collider2.rect);
+    }else{
+        bodyPos = GetRectPosCenter(collider2.rect);
+        blockPos = GetRectPosCenter(collider1.rect);
+    }
+    //左右无视
+    let w = Abs(bodyPos.x - blockPos.x);
+    if(w >= GetRectHalfWidth(bodyCollider.rect.rect) + GetRectHalfWidth(bodyCollider.rect.rect)){
+        return;
+    }
+    if(bodyPos.y <= blockPos.y){
+        //踩地
+        touchLand();
+    }else{
+        //撞头
+        touchTop();
     }
 }
 
-class GenUnitRandomPos extends Action {
-    constructor(entityId, max = 0, dataKey = ""){
-        super(entityId);
-        this.max = max;
-        this.dataKay = dataKey;
+function touchLand() {
+    onLandFlag = 1;
+    if(sca.status != status_onFall){
+        return;
     }
-    onStart(){
-        SetPos(this.entityId, Math.random() * this.max, 20);
-        let pos = GetPosComponent(this.entityId);
-        GenUnit(this.entityId, this.dataKay, pos.x, pos.y);
-    }
+    switchOnland();
 }
 
-export {CmdMoveAction, GenUnitAction, RollBackgroundAction, GenUnitRandomPos}
+function touchTop() {
+    if(sca.status != status_onFall){
+        return;
+    }
+    let v = GetVec(sca.entityId);
+    SetVec(sca.entityId, v.x, 0);
+}
+
+export{GetStatusChangerAction}

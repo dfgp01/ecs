@@ -7,6 +7,9 @@ import { actionUpdate, actionEnd } from "../../action/base";
  * 动作系统
  */
 class ActionSystem extends System {
+    constructor(){
+        super(999);
+    }
     onUpdate(dt = 0) {
         LinkIterator(GetRunnigActionList(), action => {
             actionUpdate(action, dt);

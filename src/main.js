@@ -9,6 +9,8 @@ import { NewPos } from './framework/foundation/geometric/point';
 import { NewRect } from './framework/foundation/geometric/rect';
 import { SetPos, Move } from './framework/component/pos/utils';
 import { KEY_A, KEY_W, KEY_S, KEY_D } from './framework/foundation/engine/h5/model';
+import { GetCmdComponent, PushCmd, cmd_mv_up, cmd_mv_left, cmd_mv_down, cmd_mv_right, ReleaseCmd, CreateCMDMoveAction } from './game/cmd';
+import { RunAction } from './framework/action/utils';
 
 /**
  *  2019.10.09
@@ -17,100 +19,86 @@ import { KEY_A, KEY_W, KEY_S, KEY_D } from './framework/foundation/engine/h5/mod
 
 //谨记数据驱动
 var options = Object.assign(data, {
-    debug : true,
-    collide : {
-        useBox : true
-    },
     keyDownHandler : keyDownHandler,
-    keyUpHanler : keyUpHanler
+    keyUpHanler : keyUpHanler,
+    dx : 8,
+    dy : 8,
+    bodySize : 25,
+    blockSize : 20
 });
 options.tilemap.initHandler = initHandler;
 
 function initHandler(val = 0, tilemap = null, grid = null){
     let pos = GetGridCenter(tilemap, grid);
-    if(val == 1){
-        NewBlock(pos.x, pos.y, GetGridWidth(tilemap.gridmap), GetGridHeight(tilemap.gridmap));
-    }else if(val == 2){
-        NewPlayer(pos.x, pos.y);
+    switch(val){
+        case 0:
+            break;
+        case 9:
+            NewPlayer(pos.x, pos.y);
+            break;
+        default:
+            NewBlock(pos.x, pos.y, options.blockSize * val, options.blockSize * val);
+            break;
     }
 }
 
 function NewBlock(x = 0, y = 0, width = 0, height = 0){
-    AddBlockCollider(new Entity().id, NewRectPosTuple(
-        NewPos(x, y), 0, 0, NewRect(0, 0, width, height)
+    let id = new Entity().id;
+    SetPos(id, x, y);
+    AddBlockCollider(id, NewRectPosTuple(
+        id, 0, 0, NewRect(0, 0, width, height)
     ));
 }
 
 var plyId = 0;
-var plyPos = null;
+var cmdCom = null;
 function NewPlayer(x = 0, y = 0){
     plyId = new Entity().id;
-    plyPos = SetPos(plyId, x, y);
+    SetPos(plyId, x, y);
     AddBodyCollider(plyId, NewRectPosTuple(
-        plyPos, 0, 0, NewRect(0, 0, 25, 25)
+        plyId, 0, 0, NewRect(0, 0, options.bodySize, options.bodySize)
     ));
+    cmdCom = GetCmdComponent(plyId);
+    RunAction(
+        CreateCMDMoveAction(plyId, 0, options.dx, options.dy));
 }
 
-var keys = 0;   //1111 = 上下左右
 function keyDownHandler(code = 0){
     switch(code){
         case KEY_W:
-            keys = keys | 8;
+            PushCmd(cmdCom, cmd_mv_up);
             break;
         case KEY_A:
-            keys = keys | 2;
+            PushCmd(cmdCom, cmd_mv_left);
             break;
         case KEY_S:
-            keys = keys | 4;
+            PushCmd(cmdCom, cmd_mv_down);
             break;
         case KEY_D:
-            keys = keys | 1;
+            PushCmd(cmdCom, cmd_mv_right);
             break;
     }
 }
 function keyUpHanler(code = 0){
     switch(code){
         case KEY_W:
-            keys = keys & 7;
+            ReleaseCmd(cmdCom, cmd_mv_up);
             break;
         case KEY_A:
-            keys = keys & 13;
+            ReleaseCmd(cmdCom, cmd_mv_left);
             break;
         case KEY_S:
-            keys = keys & 11;
+            ReleaseCmd(cmdCom, cmd_mv_down);
             break;
         case KEY_D:
-            keys = keys & 14;
+            ReleaseCmd(cmdCom, cmd_mv_right);
             break;
     }
 }
 
-var d = 2;
-var dx = 0;
-var dy = 0;
 class MyScene {
-    onStart(){
-
-    }
-    onUpdate(dt = 0){
-        if(keys & 1){
-            dx = d;
-        }else if(keys & 2){
-            dx = -d;
-        }else{
-            dx = 0;
-        }
-
-        if(keys & 4){
-            dy = d;
-        }else if(keys & 8){
-            dy = -d;
-        }else{
-            dy = 0
-        }
-        Move(plyId, dx, dy);
-    }
-    
+    onStart(){}
+    onUpdate(dt = 0){}
 }
 
 (function (){

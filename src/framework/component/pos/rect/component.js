@@ -1,22 +1,28 @@
 import { NewPos, NewVec } from "../../../foundation/geometric/point";
 import { GetRectHalfWidth, GetRectHalfHeight } from "../../../foundation/geometric/rect";
+import { GetPos, GetVec } from "../utils";
 
 /**
  * 矩形与位置的关系元件
  */
 class RectPosTuple{
-    constructor(unitPos = null, xOffset = 0, yOffset = 0, rect = null){
-        this.unitPos = unitPos;
+    constructor(entityId = 0, xOffset = 0, yOffset = 0, rect = null){
+        this.entityId = entityId;
+        this.unitPos = null;
+        this.unitVec = null;
         this.offset = NewVec(xOffset, yOffset);
         this.rect = rect;
     }
 }
 
-function NewRectPosTuple(unitPos = null, xOffset = 0, yOffset = 0, rect = null) {
-    if(!unitPos || !rect){
+function NewRectPosTuple(entityId = 0, xOffset = 0, yOffset = 0, rect = null) {
+    if(!rect){
         return null;
     }
-    return new RectPosTuple(unitPos, xOffset, yOffset, rect);
+    let r = new RectPosTuple(entityId, xOffset, yOffset, rect);
+    r.unitPos = GetPos(entityId);
+    r.unitVec = GetVec(entityId);
+    return r;
 }
 
 function UpdateRectPosOffset(rectPosTuple = null, xOffset = 0, yOffset = 0){
