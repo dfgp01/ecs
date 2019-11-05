@@ -14,33 +14,16 @@ import { GetBoxColliderSystem } from './box2/system';
  * }
  * callback : callback = function(dt, collider1, collider2)
  */
-var cfg = {
-    useGroup : false,
-    pairs : [],
-    useBox : false,
-    callback : null,
-    sysList : []
-};
-
 function OpenCollider(options = null){
-    cfg.useGroup = options.useGroup ? options.useGroup : cfg.useGroup;
-    cfg.pairs = options.pairs ? options.pairs : cfg.pairs;
-    cfg.useBox = options.useBox ? options.useBox : cfg.useBox;
-    cfg.callback = options.callback;
-
-    if(cfg.useBox){
-        cfg.sysList.push(GetBoxColliderSystem(options.callback));
+    if(options.useBox){
+        AddSystem(GetBoxColliderSystem());
     }
-    if(cfg.useGroup){
-        cfg.sysList.push(GetGroupColliderSystem(options.callback));
-        cfg.pairs.forEach(pair => {
-            AddGroupPair(pair[0], pair[1]);
+    if(options.group && options.group.length > 0){
+        options.group.forEach(pair => {
+            AddGroupPair(pair['team1'], pair['team2']);
         });
+        AddSystem(GetGroupColliderSystem(options.callback));
     }
-    //cfg.sysList.push(GetNormalColliderSystem(options.callback));
-    cfg.sysList.forEach(sys => {
-        AddSystem(sys);
-    });
 }
 
 

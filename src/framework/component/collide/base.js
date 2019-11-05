@@ -25,6 +25,7 @@ function GetRectPosTuple(collider = null){
  */
 class ColliderSystem extends System {
     constructor(callback = null){
+        super();
         this.callback = callback;
     }
     check(dt = 0, collider1 = null, collider2 = null){

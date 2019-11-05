@@ -1,41 +1,45 @@
 import { Action } from "../framework/action/base";
-import { Move, GetVec, SetVec } from "../framework/component/pos/utils";
+import { GetVec, SetVec, SetVecY } from "../framework/component/pos/utils";
 import { RunAction, StopAction } from "../framework/action/utils";
 import { GetRectPosCenter } from "../framework/component/pos/rect/component";
-import { GetRectHalfHeight, GetRectHalfWidth } from "../framework/foundation/geometric/rect";
+import { GetRectHalfWidth } from "../framework/foundation/geometric/rect";
 import { Abs } from "../framework/foundation/geometric/math";
+import { CreateCMDMoveAction, cmd_jump } from "./cmd";
+import { CreateFallAction } from "./fall";
 
 class StatusChangerAction extends Action{
     constructor(entityId = 0, priority = 0, moveDx = 0, jumpDy = 0, fallDy = 0, fallMaxDy = 0){
         super(entityId, priority);
         this.jumpDy = jumpDy;
-        this.fallAct = new FallAction(entityId, priority + 1, fallDy, fallMaxDy);
-        this.moveAct = new CMDMoveAction(entityId, priority + 1, moveDx);
+        this.fallAct = CreateFallAction(entityId, priority + 1, fallDy, fallMaxDy);
+        this.moveAct = CreateCMDMoveAction(entityId, priority + 1, moveDx, 0);
         this.status = 0;
     }
     onStart(){
         this.cmd = GetCmd(this.entityId);
+        this.vec = GetVec(this.entityId);
         RunAction(this.moveAct);
     }
     onUpdate(dt = 0){
         do{
-            if(!onLandFlag){
-                switchOnFall();
-                break;
-            }
             //地面起跳
             if(this.status == status_onLand && this.cmd & cmd_jump){
                 switchJump();
                 break;
             }
+            if(onLandCheckFlag == 0){
+                switchOnFall();
+                break;
+            }
         }while(false);
-        onLandFlag = 0;
+        onLandCheckFlag = 0;
     }
 }
 
-const onLandFlag = 0;
-const status_onLand = 1;
-const status_onFall = 2;
+const onLandCheckFlag = 0;
+const status_landing = 1;
+const status_onLand = 2;
+const status_onFall = 3;
 
 var sca = null;
 function GetStatusChangerAction(entityId = 0, moveDx = 0, jumpDy = 0, fallDy = 0, fallMaxDy = 0) {
@@ -46,32 +50,33 @@ function GetStatusChangerAction(entityId = 0, moveDx = 0, jumpDy = 0, fallDy = 0
 }
 
 function switchOnland() {
+    if(sca.status == status_onLand || sca.vec.y <= 0){
+        return;
+    }
     sca.status = status_onLand;
-    let v = GetVec(sca.entityId);
-    SetVec(sca.entityId, v.x, 0);
+    SetVecY(sca.vec, 0);
     StopAction(sca.fallAct);
 }
 
 function switchOnFall() {
+    if(sca.status == status_onFall){
+        return;
+    }
     sca.status = status_onFall;
     RunAction(sca.fallAct);
 }
 
 function switchJump() {
-    let v = GetVec(sca.entityId);
-    SetVec(sca.entityId, v.x, sca.jumpDy);
+    if(sca.status == status_onFall){
+        return;
+    }
+    SetVecY(sca.vec, -sca.jumpDy);
     switchOnFall();
 }
 
-function CollideCallback(collider1 = null, collider2 = null) {
-    let bodyPos, blockPos;
-    if(collider1.tag & tag_body){
-        bodyPos = GetRectPosCenter(collider1.rect);
-        blockPos = GetRectPosCenter(collider2.rect);
-    }else{
-        bodyPos = GetRectPosCenter(collider2.rect);
-        blockPos = GetRectPosCenter(collider1.rect);
-    }
+function BoxCallback(bodyCollider = null, blockCollider = null) {
+    let bodyPos = GetRectPosCenter(bodyCollider.rect);
+    let blockPos = GetRectPosCenter(blockCollider.rect);
     //左右无视
     let w = Abs(bodyPos.x - blockPos.x);
     if(w >= GetRectHalfWidth(bodyCollider.rect.rect) + GetRectHalfWidth(bodyCollider.rect.rect)){
@@ -79,19 +84,12 @@ function CollideCallback(collider1 = null, collider2 = null) {
     }
     if(bodyPos.y <= blockPos.y){
         //踩地
-        touchLand();
+        onLandCheckFlag = 1;
+        switchOnland();
     }else{
         //撞头
-        touchTop();
+        //touchTop();
     }
-}
-
-function touchLand() {
-    onLandFlag = 1;
-    if(sca.status != status_onFall){
-        return;
-    }
-    switchOnland();
 }
 
 function touchTop() {
@@ -102,4 +100,4 @@ function touchTop() {
     SetVec(sca.entityId, v.x, 0);
 }
 
-export{GetStatusChangerAction}
+export{GetStatusChangerAction, BoxCallback}

@@ -11,22 +11,32 @@ import { SetPos, Move } from './framework/component/pos/utils';
 import { KEY_A, KEY_W, KEY_S, KEY_D } from './framework/foundation/engine/h5/model';
 import { GetCmdComponent, PushCmd, cmd_mv_up, cmd_mv_left, cmd_mv_down, cmd_mv_right, ReleaseCmd, CreateCMDMoveAction } from './game/cmd';
 import { RunAction } from './framework/action/utils';
+import { GetStatusChangerAction, BoxCallback } from './game/action';
+import { AddGroupCollider } from './framework/component/collide/group/utils';
 
 /**
  *  2019.10.09
  *      vs忽然不提示import了，按照网上的方法，加了个jsconfig.json就可以了
  */
 
-//谨记数据驱动
+//谨记数据驱动，分清业务配置和框架逻辑配置
 var options = Object.assign(data, {
     keyDownHandler : keyDownHandler,
     keyUpHanler : keyUpHanler,
-    dx : 8,
-    dy : 8,
     bodySize : 25,
-    blockSize : 20
+    blockSize : 20,
+    collide : {
+		useBox : true,
+        group : [
+        {
+            team1 : 1,
+            team2 : 2
+        }],
+        callback : groupCallback
+	}
 });
 options.tilemap.initHandler = initHandler;
+
 
 function initHandler(val = 0, tilemap = null, grid = null){
     let pos = GetGridCenter(tilemap, grid);
@@ -45,9 +55,11 @@ function initHandler(val = 0, tilemap = null, grid = null){
 function NewBlock(x = 0, y = 0, width = 0, height = 0){
     let id = new Entity().id;
     SetPos(id, x, y);
-    AddBlockCollider(id, NewRectPosTuple(
+    let rect = NewRectPosTuple(
         id, 0, 0, NewRect(0, 0, width, height)
-    ));
+    );
+    AddBlockCollider(id, rect);
+    AddGroupCollider(id, rect, 0, 2);
 }
 
 var plyId = 0;
@@ -55,12 +67,16 @@ var cmdCom = null;
 function NewPlayer(x = 0, y = 0){
     plyId = new Entity().id;
     SetPos(plyId, x, y);
-    AddBodyCollider(plyId, NewRectPosTuple(
+    let rect = NewRectPosTuple(
         plyId, 0, 0, NewRect(0, 0, options.bodySize, options.bodySize)
-    ));
+    );
+    AddBodyCollider(plyId, rect);
+    AddGroupCollider(plyId, rect, 0, 1);
     cmdCom = GetCmdComponent(plyId);
-    RunAction(
-        CreateCMDMoveAction(plyId, 0, options.dx, options.dy));
+    RunAction(CreateCMDMoveAction(plyId, 0, options.dx, options.dy));
+    // RunAction(
+    //     GetStatusChangerAction(plyId, options.dx, options.jumpDy, options.fallDy, options.maxFallDy)
+    // );
 }
 
 function keyDownHandler(code = 0){
@@ -98,7 +114,8 @@ function keyUpHanler(code = 0){
 
 class MyScene {
     onStart(){}
-    onUpdate(dt = 0){}
+    onUpdate(dt = 0){
+    }
 }
 
 (function (){

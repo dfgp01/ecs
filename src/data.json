@@ -1,8 +1,5 @@
 {
 	"debug" : true,
-	"collide" : {
-		"use-box" : true
-	},
 	"screen" : {
 		"width" : 400,
 		"height" : 400
@@ -27,5 +24,10 @@
 		"columns" : 10,
 		"gridWidth" : 40,
 		"gridHeight" : 40
-	}
+	},
+	"dx" : 2,
+	"dy" : 2,
+	"jumpDy" : 5,
+	"fallDy" : 1.4,
+	"maxFallDy" : 5
 }

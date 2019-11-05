@@ -18,6 +18,12 @@ function SetVec(entityId = 0, x = 0, y = 0){
     vec.y = y;
     return vec;
 }
+function SetVecX(vec = null, x = 0){
+    vec.x = x;
+}
+function SetVecY(vec = null, y = 0){
+    vec.y = y;
+}
 
 function GetVec(entityId = 0){
     return GetPosComponent(entityId).vec;
@@ -40,4 +46,4 @@ function RemoveMover(entityId = 0) {
     RemoveByKeyId(moveList, entityId);
 }
 
-export {SetPos, GetPos, GetVec, SetVec, GetMoverList, AddMover, RemoveMover}
+export {SetPos, GetPos, GetVec, SetVec, SetVecX, SetVecY, GetMoverList, AddMover, RemoveMover}

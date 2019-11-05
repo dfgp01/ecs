@@ -4,7 +4,7 @@ import { GetRectPosCenter, GetRectPosStart, GetRectPosEnd, GetRectUnitPos } from
 import { System } from "../../../foundation/structure/ecs";
 import { LinkIterator } from "../../../foundation/structure/link";
 import { GetBodyColliderList, GetBlockColliderList } from "./utils";
-import { GetVec } from "../../pos/utils";
+import { GetVec, SetVecWithEndPos, SetVecX, SetVecY } from "../../pos/utils";
 import { NewPos } from "../../../foundation/geometric/point";
 import { Abs, Max, Min } from "../../../foundation/geometric/math";
 
@@ -15,8 +15,9 @@ import { Abs, Max, Min } from "../../../foundation/geometric/math";
  *      若一边被收窄，还原另一边的活动
  */
 class BoxColliderSystem extends System {
-    constructor(){
+    constructor(callback = null){
         super(900);
+        this.callback = callback;
     }
     onUpdate(dt = 0){
         LinkIterator(GetBodyColliderList(), body => {
@@ -26,7 +27,6 @@ class BoxColliderSystem extends System {
             LinkIterator(GetBlockColliderList(), block => {
                 logic(body, block);
             });
-            bodyAfter(body);
         });
     }
 }
@@ -39,12 +39,6 @@ function GetBoxColliderSystem(callback = null){
     return boxColliderSys;
 }
 
-var bodyX = 0;
-var bodyY = 0;
-var minX = 0;
-var maxX = 0;
-var minY = 0;
-var maxY = 0;
 var bodyStart = null;
 var bodyEnd = null;
 var blockStart = null;
@@ -52,6 +46,7 @@ var blockEnd = null;
 var unitVec = null;
 var bodyHalfWidth = 0;
 var bodyHalfHeight = 0;
+var bodyPos = null;
 
 /**
  * 前置处理，临时变量赋值，以免重复计算
@@ -66,14 +61,7 @@ function bodyBefore(bodyCollider = null){
 
     bodyStart = GetRectPosStart(bodyCollider.rect);
     bodyEnd = GetRectPosEnd(bodyCollider.rect);
-    minX = bodyEnd.x + unitVec.x;
-    maxX = bodyStart.x + unitVec.x;
-    minY = bodyEnd.y + unitVec.y;
-    maxY = bodyStart.y + unitVec.y;
-
-    let p = GetRectPosCenter(bodyCollider.rect);
-    bodyX = p.x + unitVec.x;
-    bodyY = p.y + unitVec.y;
+    bodyPos = GetRectPosCenter(bodyCollider.rect);
     return true;
 }
 
@@ -98,15 +86,8 @@ function isLR(){
         return false;
     }
     //计算x最新活动范围（最短距离）
-    if(unitVec.x > 0){
-        if(blockStart.x < minX){
-            minX = blockStart.x;
-        }
-    }else{
-        if(blockEnd.x > maxX){
-            maxX = blockEnd.x;
-        }
-    }
+    let x = unitVec.x > 0 ? blockStart.x - bodyHalfWidth : blockEnd.x + bodyHalfWidth;
+    SetVecX(unitVec, x - bodyPos.x);
     return true;
 }
 
@@ -121,38 +102,10 @@ function isUD(){
     if(minX2 <= maxX1){
         return false;
     }
-    //计算x最新活动范围（最短距离）
-    if(unitVec.y > 0){
-        if(blockStart.y < minY){
-            minY = blockStart.y;
-        }
-    }else{
-        if(blockEnd.y > maxY){
-            maxY = blockEnd.y;
-        }
-    }
+    //计算y最新活动范围（最短距离）
+    let y = unitVec.y > 0 ? blockStart.y - bodyHalfHeight : blockEnd.y + bodyHalfHeight;
+    SetVecY(unitVec, y - bodyPos.y);
     return true;
-}
-
-function bodyAfter(bodyCollider = null) {
-    let x = 0;
-    if(unitVec.x > 0){
-        x = minX - bodyHalfWidth;
-    }else if(unitVec.x < 0){
-        x = maxX + bodyHalfWidth;
-    }else{
-        x = bodyX;
-    }
-
-    let y = 0;
-    if(unitVec.y > 0){
-        y = minY - bodyHalfHeight;
-    }else if(unitVec.y < 0){
-        y = maxY + bodyHalfHeight;
-    }else{
-        y = bodyY;
-    }
-    FixUnitVec(bodyCollider.rect, x, y);
 }
 
 export {GetBoxColliderSystem}
