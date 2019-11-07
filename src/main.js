@@ -8,8 +8,8 @@ import { NewRectPosTuple } from './framework/component/pos/rect/component';
 import { NewPos } from './framework/foundation/geometric/point';
 import { NewRect } from './framework/foundation/geometric/rect';
 import { SetPos, Move } from './framework/component/pos/utils';
-import { KEY_A, KEY_W, KEY_S, KEY_D } from './framework/foundation/engine/h5/model';
-import { GetCmdComponent, PushCmd, cmd_mv_up, cmd_mv_left, cmd_mv_down, cmd_mv_right, ReleaseCmd, CreateCMDMoveAction } from './game/cmd';
+import { KEY_A, KEY_W, KEY_S, KEY_D, KEY_SPACE } from './framework/foundation/engine/h5/model';
+import { GetCmdComponent, PushCmd, cmd_mv_up, cmd_mv_left, cmd_mv_down, cmd_mv_right, ReleaseCmd, CreateCMDMoveAction, cmd_jump } from './game/cmd';
 import { RunAction } from './framework/action/utils';
 import { GetStatusChangerAction, BoxCallback } from './game/action';
 import { AddGroupCollider } from './framework/component/collide/group/utils';
@@ -23,8 +23,6 @@ import { AddGroupCollider } from './framework/component/collide/group/utils';
 var options = Object.assign(data, {
     keyDownHandler : keyDownHandler,
     keyUpHanler : keyUpHanler,
-    bodySize : 25,
-    blockSize : 20,
     collide : {
 		useBox : true,
         group : [
@@ -32,7 +30,7 @@ var options = Object.assign(data, {
             team1 : 1,
             team2 : 2
         }],
-        callback : groupCallback
+        callback : BoxCallback
 	}
 });
 options.tilemap.initHandler = initHandler;
@@ -47,7 +45,7 @@ function initHandler(val = 0, tilemap = null, grid = null){
             NewPlayer(pos.x, pos.y);
             break;
         default:
-            NewBlock(pos.x, pos.y, options.blockSize * val, options.blockSize * val);
+            NewBlock(pos.x, pos.y, GetGridWidth(tilemap.gridmap), GetGridHeight(tilemap.gridmap));
             break;
     }
 }
@@ -73,42 +71,46 @@ function NewPlayer(x = 0, y = 0){
     AddBodyCollider(plyId, rect);
     AddGroupCollider(plyId, rect, 0, 1);
     cmdCom = GetCmdComponent(plyId);
-    RunAction(CreateCMDMoveAction(plyId, 0, options.dx, options.dy));
-    // RunAction(
-    //     GetStatusChangerAction(plyId, options.dx, options.jumpDy, options.fallDy, options.maxFallDy)
-    // );
+    //RunAction(CreateCMDMoveAction(plyId, 0, options.dx, options.dy));
+    RunAction(
+        GetStatusChangerAction(plyId, options.dx, options.jumpDy, options.fallDy, options.maxFallDy)
+    );
 }
 
 function keyDownHandler(code = 0){
     switch(code){
-        case KEY_W:
-            PushCmd(cmdCom, cmd_mv_up);
-            break;
+        // case KEY_W:
+        //     PushCmd(cmdCom, cmd_mv_up);
+        //     break;
+        // case KEY_S:
+        //     PushCmd(cmdCom, cmd_mv_down);
+        //     break;
         case KEY_A:
             PushCmd(cmdCom, cmd_mv_left);
-            break;
-        case KEY_S:
-            PushCmd(cmdCom, cmd_mv_down);
             break;
         case KEY_D:
             PushCmd(cmdCom, cmd_mv_right);
             break;
+        case KEY_SPACE:
+            PushCmd(cmdCom, cmd_jump);
     }
 }
 function keyUpHanler(code = 0){
     switch(code){
-        case KEY_W:
-            ReleaseCmd(cmdCom, cmd_mv_up);
-            break;
+        // case KEY_W:
+        //     ReleaseCmd(cmdCom, cmd_mv_up);
+        //     break;
+        // case KEY_S:
+        //     ReleaseCmd(cmdCom, cmd_mv_down);
+        //     break;
         case KEY_A:
             ReleaseCmd(cmdCom, cmd_mv_left);
-            break;
-        case KEY_S:
-            ReleaseCmd(cmdCom, cmd_mv_down);
             break;
         case KEY_D:
             ReleaseCmd(cmdCom, cmd_mv_right);
             break;
+        case KEY_SPACE:
+                ReleaseCmd(cmdCom, cmd_jump);
     }
 }
 

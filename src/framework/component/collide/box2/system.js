@@ -47,11 +47,13 @@ var unitVec = null;
 var bodyHalfWidth = 0;
 var bodyHalfHeight = 0;
 var bodyPos = null;
+var bodyId = 0;
 
 /**
  * 前置处理，临时变量赋值，以免重复计算
  */
 function bodyBefore(bodyCollider = null){
+    bodyId = bodyCollider.entityId;
     unitVec = GetVec(bodyCollider.entityId);
     if(unitVec.x == 0 && unitVec.y == 0){
         return false;
@@ -87,7 +89,7 @@ function isLR(){
     }
     //计算x最新活动范围（最短距离）
     let x = unitVec.x > 0 ? blockStart.x - bodyHalfWidth : blockEnd.x + bodyHalfWidth;
-    SetVecX(unitVec, x - bodyPos.x);
+    SetVecX(bodyId, x - bodyPos.x);
     return true;
 }
 
@@ -104,7 +106,7 @@ function isUD(){
     }
     //计算y最新活动范围（最短距离）
     let y = unitVec.y > 0 ? blockStart.y - bodyHalfHeight : blockEnd.y + bodyHalfHeight;
-    SetVecY(unitVec, y - bodyPos.y);
+    SetVecY(bodyId, y - bodyPos.y);
     return true;
 }
 

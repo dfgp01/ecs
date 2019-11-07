@@ -29,6 +29,11 @@ function ReleaseCmd(cmdCom = null, val = 0) {
     cmdCom.val = cmdCom.val ^ val;
 }
 
+function IsPushJump(entityId = 0){
+    let com = GetCmdComponent(entityId);
+    return (com.val & cmd_jump) > 0;
+}
+
 
 class CMDMoveAction extends MoveAction{
     constructor(entityId = 0, priority = 0, dx = 0, dy = 0){
@@ -71,4 +76,4 @@ export const cmd_mv_left = 2;
 export const cmd_mv_up = 4;
 export const cmd_mv_down = 8;
 export const cmd_jump = 16;
-export{GetCmdComponent, PushCmd, ReleaseCmd, CreateCMDMoveAction}
+export{GetCmdComponent, PushCmd, ReleaseCmd, IsPushJump, CreateCMDMoveAction}

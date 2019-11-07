@@ -7,14 +7,12 @@ import { GetMoverList } from "../../component/pos/utils";
  *      经过考虑，目前只做简单版本，不要想得太长远
  *      所以先不用系统统一更新位置，直接在action中setpos就好
  */
-var id = 0;
 class PosUpdateSystem extends System {
     constructor(){
         super(100);
     }
     onUpdate(dt = 0){
         LinkIterator(GetMoverList(), moveCom => {
-            id++;
             let vec = moveCom.vec;
             if(vec.x == 0 && vec.y == 0 ){
                 return;
